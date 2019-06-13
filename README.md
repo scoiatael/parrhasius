@@ -1,6 +1,10 @@
 # 4chan-downloader
 Simple ruby script to download images from 4chan thread
 
+## Setup
+
+1. Run `bundle install`.
+
 ## Download
 
 1. Find a nice wallpaper thread to download from. e.g.: `http://boards.4chan.org/wg/thread/7412420`
