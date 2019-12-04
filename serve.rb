@@ -9,31 +9,45 @@ options = {
   base_path: ''
 }
 
-if ENV['DEVELOPMENT_HOST']
-  options[:base_path] = 'http://localhost:4567'
+if ENV['APP_ENV'] == 'production'
+  set :public_folder, 'ext/gallery/build'
+
+  get '/' do
+    redirect '/index.html'
+  end
+else
+  options[:base_path] = 'http://localhost:9393'
 
   before do
     headers(
       'Access-Control-Allow-Origin' => 'http://localhost:3000'
     )
   end
-else
-  set :public_folder, 'ext/gallery/build'
-
-  get '/' do
-    redirect '/index.html'
-  end
 end
 
 get '/all' do
-  JSON.dump(serve.all.map do |t|
-              {
-                src: options[:base_path] + '/image/' + File.basename(t.path),
-                width: t.width,
-                height: t.height,
-                original: options[:base_path] + '/image_full/' + File.basename(t.path)
-              }
-            end)
+  page_size = 200
+  page_number = Integer(params[:page] || '0')
+  page_start = page_number * page_size
+  page_end = page_start + page_size
+  data = serve.all
+  has_next = data.size > page_end
+  records = data[page_start...page_end].map do |t|
+    {
+      src: options[:base_path] + '/image/' + File.basename(t.path),
+      width: t.width,
+      height: t.height,
+      original: options[:base_path] + '/image_full/' + File.basename(t.path)
+    }
+  end
+  JSON.dump(
+    records: records,
+    page: {
+      number: page_number,
+      has_next: has_next,
+      next: page_number + 1
+    }
+  )
 end
 
 get '/image_full/:id' do |id|

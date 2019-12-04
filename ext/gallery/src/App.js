@@ -2,21 +2,27 @@ import React, { useState, useCallback, useEffect } from "react";
 import Gallery from "react-photo-gallery";
 import Carousel, { Modal, ModalGateway } from "react-images";
 
-async function photos() {
-    const server = "http://localhost:4567"
-    const response = await fetch(server + '/all');
+async function photos(page) {
+    const server = process.env.NODE_ENV === 'production' ? '' : "http://localhost:9393"
+    const response = await fetch(server + '/all?page=' + page);
     const all = await response.json();
     return all;
 }
 
 function App() {
+  const [currentPage, setCurrentPage] = useState(0);
   const [currentPhotos, setCurrentPhotos] = useState([]);
   const [currentImage, setCurrentImage] = useState(0);
   const [viewerIsOpen, setViewerIsOpen] = useState(false);
 
   useEffect(() => {
-      photos().then((ps) => { setCurrentPhotos(ps) })
-  }, []);
+      photos(currentPage).then((data) => {
+          setCurrentPhotos(c => c.concat(...data.records));
+          if (data.page.has_next) {
+              setCurrentPage(p => p+1);
+          }
+      })
+  }, [currentPage]);
 
   const openLightbox = useCallback((event, { photo, index }) => {
     setCurrentImage(index);
