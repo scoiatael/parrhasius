@@ -7,17 +7,11 @@ require 'fileutils'
 module Parrhasius
   module Downloaders
     class Soup
-      def save(link, name)
-        open(@folder + '/' + name + '.jpg', 'wb') do |file|
-          file << open(link).read
-        end
-      end
-
       def download(link)
         img_link = link.attributes['href']
         return unless img_link
 
-        save(img_link, img_link.to_s.split('/').last)
+        [img_link.to_s.split('/').last, open(img_link).read]
       end
 
       def enumerate_link(base_link)
@@ -36,15 +30,7 @@ module Parrhasius
 
       def initialize(main_page)
         @main_page = main_page
-        @folder = folder!
         @links = enumerate_link(@main_page)
-        FileUtils.mkdir_p(@folder)
-      end
-
-      def folder!
-        parts = @main_page.split('.')
-        name = parts.first.split('/').last
-        ['soup', name].join('/')
       end
 
       def each(&block)

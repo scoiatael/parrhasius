@@ -3,22 +3,15 @@
 require 'open-uri'
 require 'nokogiri'
 require 'securerandom'
-require 'fileutils'
 
 module Parrhasius
   module Downloaders
     class FourChan
-      def save(link)
-        open(folder(link), 'wb') do |file|
-          file << open('https:' + link).read
-        end
-      end
-
       def download(link)
         img_link = link.attributes['href']
         return unless img_link
 
-        save(img_link.value)
+        [SecureRandom.uuid + ext(img_link.value), open('https:' + img_link.value).read]
       end
 
       def enumerate_link(link)
@@ -30,11 +23,6 @@ module Parrhasius
       def initialize(main_page)
         @main_page = main_page
         @links = enumerate_link(@main_page)
-        FileUtils.mkdir_p('imgs')
-      end
-
-      def folder(link)
-        ['imgs', SecureRandom.uuid + ext(link)].join('/')
       end
 
       def ext(link)

@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
-require "mini_magick"
+require 'mini_magick'
+require_relative 'serve/page'
 
 module Parrhasius
   class Serve
     def initialize(dir)
-      thumbnails = Dir["#{dir}/thumbnail/*"].map { |p|  MiniMagick::Image.new(p) }
+      thumbnails = Dir["#{dir}/thumbnail/*"].map { |p| MiniMagick::Image.new(p) }
       @by_basename = Hash[thumbnails.map { |t| [File.basename(t.path), t] }]
     end
 

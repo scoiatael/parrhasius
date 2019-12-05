@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Parrhasius
-  module Dedup
+  class Dedup
     class Img
       BIN = '~/go/bin/parrhasius'
 

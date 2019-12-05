@@ -1,16 +1,17 @@
 # frozen_string_literal: true
 
-require_relative 'parrhasius/downloaders/fourchan'
-require_relative 'parrhasius/downloaders/soup'
+require_relative 'downloaders/fourchan'
+require_relative 'downloaders/soup'
 
 module Parrhasius
   class Download
-    def initialize(downloader)
+    def initialize(downloader, storage)
       @downloader = downloader
+      @storage = storage
     end
 
     def run(*links)
-      pb = ProgressBar.create(title: 'Scrape', total: ARGV.size, format: "%t (%c/%C): |\e[0;33m%B\e[0m| %E")
+      pb = ProgressBar.create(title: 'Scrape', total: links.size, format: "%t (%c/%C): |\e[0;33m%B\e[0m| %E")
       downloads = links.map do |wp|
         pb.increment
         @downloader.new(wp)
@@ -21,7 +22,7 @@ module Parrhasius
       pb = ProgressBar.create(title: 'Download', total: total, format: "%t (%c/%C): |\e[0;34m%B\e[0m| %E")
       downloads.each do |download|
         download.each do |link|
-          download.download(link)
+          @storage.save(*download.download(link))
           pb.increment
         end
       end
