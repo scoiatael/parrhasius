@@ -26,31 +26,27 @@ else
 end
 
 get '/all' do
-  page_size = 200
-  page_number = Integer(params[:page] || '0')
-  page_start = page_number * page_size
-  page_end = page_start + page_size
   data = serve.all
-  has_next = data.size > page_end
-  records = data[page_start...page_end].map do |t|
+  page = Parrhasius::Serve::Page.new(size: 200, current: Integer(params[:page] || '0'), total: data.size)
+  records = data[page.start...page.end].map do |t|
     {
       src: options[:base_path] + '/image/' + File.basename(t.path),
       width: t.width,
       height: t.height,
-      original: options[:base_path] + '/image_full/' + File.basename(t.path)
+      original: options[:base_path] + '/image_full/' + File.basename(t.path),
+      title: File.basename(t.path)
     }
   end
   JSON.dump(
     records: records,
-    page: {
-      number: page_number,
-      has_next: has_next,
-      next: page_number + 1
-    }
+    page: page.to_h
   )
 end
 
 get '/image_full/:id' do |id|
+  headers(
+    'Cache-Control' => 'immutable'
+  )
   thumbnail = serve.by_basename(id)
   img = serve.full(thumbnail.path)
 
@@ -59,7 +55,24 @@ get '/image_full/:id' do |id|
 end
 
 get '/image/:id' do |id|
+  headers(
+    'Cache-Control' => 'immutable'
+  )
   img = serve.by_basename(id)
   content_type img.mime_type
   File.read(img.path)
+end
+
+options '/image/:id' do
+  headers(
+    'Access-Control-Allow-Methods' => 'OPTIONS, GET, DELETE'
+  )
+  status 204
+  []
+end
+
+delete '/image/:id' do |id|
+  serve.delete(id)
+
+  'OK'
 end

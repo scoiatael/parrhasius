@@ -19,7 +19,19 @@ module Parrhasius
     end
 
     def full(path)
-      MiniMagick::Image.new(path.sub('thumbnail', 'original'))
+      MiniMagick::Image.new(full_path(path))
+    end
+
+    def delete(basename)
+      thumb = @by_basename.fetch(basename).path
+      File.delete(thumb)
+      File.delete(full_path(thumb))
+    end
+
+    private
+
+    def full_path(path)
+      path.sub('thumbnail', 'original')
     end
   end
 end
