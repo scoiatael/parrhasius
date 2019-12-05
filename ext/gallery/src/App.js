@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useEffect } from "react";
 import Gallery from "react-photo-gallery";
 import Carousel, { Modal, ModalGateway } from "react-images";
+import InfiniteScroll from 'react-infinite-scroller';
 
 async function photos(page) {
     const server = process.env.NODE_ENV === 'production' ? '' : "http://localhost:9393"
@@ -20,13 +21,18 @@ function App() {
   const [currentImage, setCurrentImage] = useState(0);
   const [viewerIsOpen, setViewerIsOpen] = useState(false);
 
+  const loadPhotos = useCallback((page) => {
+    photos(page).then((data) => {
+      setCurrentPhotos(c => c.concat(...data.records));
+      if (data.page.has_next) {
+        setCurrentPage(p => p+1);
+      } else {
+        setCurrentPage(null);
+      }
+    }).catch(console.error.bind(console));
+  }, [])
+
   useEffect(() => {
-      photos(currentPage).then((data) => {
-          setCurrentPhotos(c => c.concat(...data.records));
-          if (data.page.has_next) {
-              setCurrentPage(p => p+1);
-          }
-      }).catch(console.error.bind(console));
   }, [currentPage]);
 
   const openLightbox = useCallback((event, { photo, index }) => {
@@ -50,7 +56,14 @@ function App() {
 
   return (
     <div>
-      <Gallery photos={currentPhotos} onClick={openLightbox} />
+        <InfiniteScroll
+            pageStart={0}
+            loadMore={loadPhotos}
+            hasMore={currentPage !== null}
+            loader={<div className="loader" key={0}>Loading ...</div>}
+            >
+                <Gallery photos={currentPhotos} onClick={openLightbox} />
+        </InfiniteScroll>
       <ModalGateway>
         {viewerIsOpen ? (
           <Modal onClose={closeLightbox}>
