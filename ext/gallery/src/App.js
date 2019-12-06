@@ -2,6 +2,7 @@ import React, { useState, useCallback, useEffect } from "react";
 import Gallery from "react-photo-gallery";
 import Carousel, { Modal, ModalGateway } from "react-images";
 import InfiniteScroll from 'react-infinite-scroller';
+import Header from './components/Header';
 
 async function photos(page) {
   const server = process.env.NODE_ENV === 'production' ? '' : "http://localhost:9393"
@@ -41,6 +42,11 @@ function App() {
   }, []);
 
   const closeLightbox = useCallback(() => {
+    setCurrentImage(0);
+    setViewerIsOpen(false);
+  }, []);
+
+  const deleteCurrentPhoto = useCallback(() => {
     const currentPhoto = currentPhotos[currentImage];
     const toBeDeleted = window.confirm(`Delete photo ${currentPhoto.title}?`)
     if (toBeDeleted) {
@@ -55,9 +61,9 @@ function App() {
   }, [currentImage, currentPhotos]);
 
   const viewer = viewerIsOpen ? (
-    <Modal onClose={closeLightbox}>
+      <Modal onClose={closeLightbox}>
       <Carousel
-        components={{ Footer: null, NavigationPrev: null, Navigation: null}}
+        components={{ Footer: null, NavigationPrev: null, Navigation: null, Header: Header(deleteCurrentPhoto) }}
         currentIndex={currentImage}
         views={currentPhotos.map((x, idx) => ({
           ...x,
