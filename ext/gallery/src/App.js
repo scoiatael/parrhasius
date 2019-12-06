@@ -49,6 +49,7 @@ function App() {
   const deleteCurrentPhoto = useCallback(() => {
     const currentPhoto = currentPhotos[currentImage];
     const toBeDeleted = window.confirm(`Delete photo ${currentPhoto.title}?`)
+    closeLightbox();
     if (toBeDeleted) {
       deletePhoto(currentPhotos[currentImage]).then(() => {
         // Need to create a new array, since Gallery is memoized. Would be an issue for bigger galleries.
@@ -56,9 +57,7 @@ function App() {
         setCurrentPhotos(photosWithoutCurrent);
       }).catch(console.error.bind(console));
     }
-    setCurrentImage(0);
-    setViewerIsOpen(false);
-  }, [currentImage, currentPhotos]);
+  }, [currentImage, currentPhotos, closeLightbox]);
 
   const viewer = viewerIsOpen ? (
       <Modal onClose={closeLightbox}>
