@@ -72,7 +72,7 @@ function App() {
   return (
     <div>
       <InfiniteScroll
-        pageStart={0}
+        pageStart={-1}
         loadMore={loadPhotos}
         hasMore={currentPage !== null}
         loader={<div className="loader" key={0}>Loading ...</div>}

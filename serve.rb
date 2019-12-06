@@ -28,7 +28,7 @@ end
 get '/all' do
   data = serve.all
   page = Parrhasius::Serve::Page.new(size: 200, current: Integer(params[:page] || '0'), total: data.size)
-  records = data[page.start...page.end].map do |t|
+  records = data[page.start...page.end]&.map do |t|
     {
       src: options[:base_path] + '/image/' + File.basename(t.path),
       width: t.width,
@@ -38,7 +38,7 @@ get '/all' do
     }
   end
   JSON.dump(
-    records: records,
+    records: records || [],
     page: page.to_h
   )
 end
