@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'sinatra'
+require 'rack/cache'
 
 require_relative 'lib/parrhasius/serve'
 
@@ -8,6 +9,8 @@ serve = Parrhasius::Serve.new(File.expand_path(ENV['SERVE'] || './db/staging'))
 options = {
   base_path: ''
 }
+
+use Rack::Cache
 
 if ENV['APP_ENV'] == 'production'
   set :public_folder, 'ext/gallery/build'
@@ -44,23 +47,23 @@ get '/all' do
 end
 
 get '/image_full/:id' do |id|
-  headers(
-    'Cache-Control' => 'immutable'
-  )
+  cache_control :public
+  etag id
+
   thumbnail = serve.by_basename(id)
   img = serve.full(thumbnail.path)
 
   content_type img.mime_type
-  File.read(img.path)
+  send_file img.path
 end
 
 get '/image/:id' do |id|
-  headers(
-    'Cache-Control' => 'immutable'
-  )
+  cache_control :public
+  etag id
+
   img = serve.by_basename(id)
   content_type img.mime_type
-  File.read(img.path)
+  send_file img.path
 end
 
 options '/image/:id' do
