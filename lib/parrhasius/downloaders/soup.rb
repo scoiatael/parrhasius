@@ -22,7 +22,6 @@ module Parrhasius
           links += html.search('a.lightbox').to_a
           next_page = html.search('#load_more a').first
           link = next_page ? base_link + next_page['href'] : nil
-          p link
         end
 
         links
