@@ -12,13 +12,16 @@ export const Header = (onDelete) => ({ currentView, modalProps }) => {
     <div
       css={{
         alignItems: 'center',
-        backgroundColor: 'white',
+        backgroundColor: 'rgba(255, 255, 255, 0.5)',
         boxShadow: '0 1px 0 rgba(0, 0, 0, 0.1)',
         display: 'flex ',
         flex: '0 0 auto',
         height: 54,
         justifyContent: 'space-between',
         marginLeft: 'auto',
+        position: 'absolute',
+        right: '0px',
+        zIndex: 1
       }}
     >
       <div css={{
