@@ -33,9 +33,6 @@ function App() {
     }).catch(console.error.bind(console));
   }, [])
 
-  useEffect(() => {
-  }, [currentPage]);
-
   const openLightbox = useCallback((event, { photo, index }) => {
     setCurrentImage(index);
     setViewerIsOpen(true);
