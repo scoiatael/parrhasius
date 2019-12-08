@@ -1,0 +1,2 @@
+web: shotgun serve.rb
+html: cd ext/gallery && npm start
