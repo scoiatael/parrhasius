@@ -9,57 +9,68 @@ require_relative 'dedup/img'
 
 module Parrhasius
   class Dedup
-    def run(dir:, db:)
+    attr_reader :dir, :db, :imgs
+
+    def initialize(dir:, db:)
+      @dir = dir
+      @db = db
+
       everything = discover(File.expand_path(dir))
       dirs = everything.select(&:directory?)
       files = everything - dirs
 
-      pool = Concurrent::FixedThreadPool.new(Concurrent.processor_count)
-
-      imgs = files.map do |file|
+      @imgs = files.map do |file|
         Img.new(file)
       end
 
-      pb = ProgressBar.create(title: 'Hashing', total: files.size, format: "%t (%c/%C): |\e[0;33m%B\e[0m| %E")
-      cpb = Concurrent::MVar.new(pb)
-      promises = imgs.map do |i|
-        Concurrent::Promise.execute(executor: pool) do
-          i.hash!
-          cpb.borrow(&:increment)
-        end
-      end
-      Concurrent::Promise.all?(promises)
-      pool.shutdown
-      pool.wait_for_termination
-      pb.finish
+      @pb = PB.new
+    end
 
-      index = PStore.new(db)
-      index.transaction do
-        pb = ProgressBar.create(title: 'Indexing', total: imgs.size, format: "%t (%c/%C): |\e[0;34m%B\e[0m| %E")
-        imgs.each do |img|
+    def hash!
+      @pb.around(imgs, title: 'Hashing').map(&:hash!)
+    end
+
+    def index!
+      with_pstore_index do |index|
+        @pb.around(imgs, title: 'Indexing').each do |img|
           index[img.hash] ||= []
           index[img.hash] << img.path unless index[img.hash].index(img.path)
-          pb.increment
         end
-        pb.finish
       end
+    end
 
-      dups = 0
-      index.transaction do
-        pb = ProgressBar.create(title: 'Removing', total: imgs.size, format: "%t: |\e[0;34m%B\e[0m| %E")
-        imgs.each do |img|
-          if File.basename(index[img.hash].first) != File.basename(img.path)
-            img.path.delete
-            dups += 1
+    def dups
+      [].tap do |d|
+        with_pstore_index do |index|
+          @pb.around(imgs, title: 'Removing').each do |img|
+            d << img.path if dup?(index[img.hash].first, img)
           end
-          pb.increment
         end
-        pb.finish
       end
-      puts "#{dups} duplicates removed"
+    end
+
+    def run
+      hash!
+      index!
+
+      dups.tap do |d|
+        d.each do |img|
+          img.path.delete
+        end
+        puts "#{d.size} duplicates removed"
+      end
     end
 
     private
+
+    def with_pstore_index(&block)
+      index = PStore.new(db)
+      index.transaction { block.call(index) }
+    end
+
+    def dup?(original, other)
+      File.basename(original) != File.basename(other.path)
+    end
 
     def discover(dir)
       Dir["#{dir}/**/*"].map { |pn| Pathname.new(pn) }
