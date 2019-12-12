@@ -7,7 +7,12 @@ module Parrhasius
     extend FFI::Library
     ffi_lib File.expand_path('../parrhasius.so', __dir__)
 
-    attach_function :ExtHash, [:string], :string
+    class ExtHashReturn < FFI::Struct
+      layout :value, :string,
+             :error, :string
+    end
+
+    attach_function :ExtHash, [:string], ExtHashReturn.by_value
 
     class CallErr < StandardError; end
 
@@ -15,9 +20,9 @@ module Parrhasius
 
     def call(filename)
       h = ExtHash(filename)
-      raise CallErr, h[1..-1] if h.start_with?('E')
+      raise CallErr, h[:error] unless h[:error].nil?
 
-      h[1..-1] # Else it starts with "V"
+      h[:value]
     end
   end
 end

@@ -35,12 +35,12 @@ func hash(filename string) (string, error) {
 type cstring *C.char
 
 //export ExtHash
-func ExtHash(filename cstring) cstring {
+func ExtHash(filename cstring) (cstring, cstring) {
 	h, err := hash(C.GoString(filename))
 	if err != nil {
-		return C.CString(fmt.Sprintf("E%+v", err))
+		return nil, C.CString(fmt.Sprintf("%+v", err))
 	}
-	return C.CString(fmt.Sprintf("V%s", h))
+	return C.CString(h), nil
 }
 
 func main() {
