@@ -44,12 +44,12 @@ unless invalid.empty?
   raise StandardError, "#{invalid.map(&:dir).join(', ')} are invalid sources"
 end
 
-dst = ImgDir.new(INTO)
-
-unless dst.dir.exist?
-  FileUtils.mkdir_p(dst.dir + '/original')
-  FileUtils.mkdir_p(dst.dir + '/thumbnail')
+unless ImgDir.new(INTO).dir.exist?
+  FileUtils.mkdir_p(INTO + '/original')
+  FileUtils.mkdir_p(INTO + '/thumbnail')
 end
+
+dst = ImgDir.new(INTO)
 
 raise StandardError, "#{dst.dir} is invalid destination" unless dst.valid?
 
