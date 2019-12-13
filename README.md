@@ -11,7 +11,7 @@ Simple ruby script to download images from 4chan thread, organize and browse thr
 
 ### Golang
 
-`cd ext/parrhasius && go install .`
+`rake compile`
 
 ### Javascript
 

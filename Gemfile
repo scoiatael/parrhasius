@@ -1,15 +1,18 @@
 # frozen_string_literal: true
 
-source "https://rubygems.org"
+source 'https://rubygems.org'
 
-gem "nokogiri"
-gem "ruby-progressbar"
-gem "concurrent-ruby"
-gem "mini_magick"
-gem "sinatra"
+gem 'concurrent-ruby'
+gem 'ffi'
+gem 'mini_magick'
+gem 'nokogiri'
+gem 'rack-cache'
+gem 'ruby-progressbar'
+gem 'sinatra'
 
 group :development do
-  gem "pry-byebug"
-  gem "rubocop"
-  gem "shotgun"
+  gem 'pry-byebug'
+  gem 'rake'
+  gem 'rubocop'
+  gem 'shotgun'
 end

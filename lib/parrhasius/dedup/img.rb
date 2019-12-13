@@ -3,8 +3,6 @@
 module Parrhasius
   class Dedup
     class Img
-      BIN = '~/go/bin/parrhasius'
-
       attr_reader :hash, :path
 
       def initialize(path)
@@ -18,7 +16,7 @@ module Parrhasius
       private
 
       def do_hash(file)
-        `#{BIN} -filename=#{file}`.strip
+        Parrhasius::Hash.call(file.to_s).strip
       end
     end
   end

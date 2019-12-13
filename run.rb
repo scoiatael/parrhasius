@@ -18,5 +18,5 @@ links = ARGV[1..-1]
 storage = Parrhasius::Storage.new(['db', Time.now.to_i, 'original'].join('/'))
 
 Parrhasius::Download.new(downloader(source), storage).run(*links)
-Parrhasius::Dedup.new.run(db: 'db/index.pstore', dir: storage.dir)
+Parrhasius::Dedup.new(db: 'db/index.pstore', dir: storage.dir).run
 Parrhasius::Minify.new.run(src: storage.dir, dest: storage.dir.sub('original', 'thumbnail'))
