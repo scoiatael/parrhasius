@@ -7,7 +7,7 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 
-export const Header = (onDelete) => ({ modalProps: {onClose} }) => (
+export const Header = (onDelete) => ({ modalProps: {onClose}, data: {title} }) => (
     <div
       css={{
         alignItems: 'center',
@@ -20,12 +20,20 @@ export const Header = (onDelete) => ({ modalProps: {onClose} }) => (
         marginLeft: 'auto',
         position: 'absolute',
         right: '0px',
-        zIndex: 1
+        width: '100%'
       }}
     >
       <div css={{
         alignItems: 'center',
         display: 'flex ',
+        zIndex: 1,
+      }}>
+    {title}
+      </div>
+      <div css={{
+        alignItems: 'center',
+        display: 'flex ',
+        zIndex: 1,
       }}>
         <Button
           onClick={onDelete}
