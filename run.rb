@@ -4,19 +4,20 @@ require_relative 'lib/parrhasius'
 
 def downloader(source)
   case source
-  when '4chan'
+  when /4chan/
     Parrhasius::Downloaders::FourChan
-  when 'soup'
+  when /soup/
     Parrhasius::Downloaders::Soup
   else
     raise StandardError, "unexpected source: #{source}"
   end
 end
 
-source = ARGV.first
-links = ARGV[1..-1]
+links = ARGV
 storage = Parrhasius::Storage.new(['db', Time.now.to_i, 'original'].join('/'))
 
-Parrhasius::Download.new(downloader(source), storage).run(*links)
+links.group_by { |l| downloader(l) }.each do |dw, dw_links|
+  Parrhasius::Download.new(dw, storage).run(*dw_links)
+end
 Parrhasius::Dedup.new(db: 'db/index.pstore', dir: storage.dir).run
 Parrhasius::Minify.new.run(src: storage.dir, dest: storage.dir.sub('original', 'thumbnail'))
