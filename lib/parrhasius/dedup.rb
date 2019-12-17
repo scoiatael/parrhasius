@@ -54,9 +54,7 @@ module Parrhasius
       index!
 
       dups.tap do |d|
-        d.each do |img|
-          img.path.delete
-        end
+        d.each(&:delete)
         puts "#{d.size} duplicates removed"
       end
     end
