@@ -6,6 +6,7 @@ require 'fileutils'
 
 module Parrhasius
   module Downloaders
+    MAX_ITERATIONS = 20
     class Soup
       def download(link)
         img_link = link.attributes['href']
@@ -17,12 +18,17 @@ module Parrhasius
       def enumerate_link(base_link)
         links = []
         link = base_link
-        while link && links.size < 200
+        iterations = 0
+        pb = ProgressBar.create(title: 'Collecting links', total: MAX_ITERATIONS, format: "%t (%c/%C): |\e[0;37m%B\e[0m| %E")
+        while link && links.size < 200 && iterations < MAX_ITERATIONS
           html = Nokogiri(open(link).read)
           links += html.search('a.lightbox').to_a
           next_page = html.search('#load_more a').first
           link = next_page ? base_link + next_page['href'] : nil
+          iterations += 1
+          pb.increment
         end
+        pb.finish
 
         links
       end
