@@ -3,7 +3,7 @@
 require 'sinatra'
 require 'rack/cache'
 
-require_relative 'lib/parrhasius/serve'
+require_relative '../lib/parrhasius/serve'
 
 serve = Parrhasius::Serve.new(File.expand_path(ENV['SERVE'] || './db/staging'))
 options = {
@@ -44,6 +44,12 @@ get '/all' do
     records: records || [],
     page: page.to_h
   )
+end
+
+get '/pages' do
+  data = serve.all
+  page = Parrhasius::Serve::Page.new(size: 200, current: 0, total: data.size)
+  JSON.dump(page.to_h)
 end
 
 get '/image_full/:id' do |id|

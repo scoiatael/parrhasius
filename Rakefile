@@ -2,7 +2,7 @@
 
 desc 'Start dev web server'
 task :'dev-webserver' do
-  sh 'shotgun serve.rb'
+  sh 'shotgun scripts/serve.rb'
 end
 
 desc 'Start dev frontend reloader'
@@ -14,7 +14,7 @@ end
 desc 'Start pre-compiled server'
 task :run do
   ENV['APP_ENV'] = 'production'
-  ruby 'serve.rb'
+  ruby 'scripts/serve.rb'
 end
 
 # Can't multitask because of chdirs inside
@@ -29,4 +29,16 @@ end
 task :compile do
   Dir.chdir File.expand_path('ext/parrhasius', __dir__)
   sh 'go build -o ../../lib/parrhasius.so -buildmode=c-shared main.go'
+end
+
+desc 'Download images from given URLs'
+task :download do
+  ARGV.shift
+  ruby 'scripts/download.rb', *ARGV
+end
+
+desc 'Merge given wallpaper folders into one'
+task :merge do
+  ARGV.shift
+  ruby 'scripts/merge_into.rb', *ARGV
 end
