@@ -27,6 +27,8 @@ export const Header = (onDelete) => ({ modalProps: {onClose}, data: {title} }) =
         alignItems: 'center',
         display: 'flex ',
         zIndex: 1,
+        backgroundColor: 'rgba(255, 255, 255, 0.5)',
+        borderRadius: '0.1em',
       }}>
     {title}
       </div>
@@ -42,10 +44,6 @@ export const Header = (onDelete) => ({ modalProps: {onClose}, data: {title} }) =
         </Button>
         <Button
           onClick={onClose}
-          css={{
-            borderLeft: `1px solid`,
-            paddingLeft: 10,
-          }}
         >
           <FontAwesomeIcon icon={faTimes} />
         </Button>
@@ -66,6 +64,9 @@ const Button = ({ css, ...props }) => (
       position: 'relative',
       textAlign: 'center',
       minWidth: 32,
+      zIndex: 2,
+      backgroundColor: 'rgba(255, 255, 255, 0.5)',
+      borderRadius: '0.5em',
 
       ...css,
     }}

@@ -1,90 +1,43 @@
-import React, { useState, useCallback, useEffect } from "react";
-import Gallery from "react-photo-gallery";
-import Carousel, { Modal, ModalGateway } from "react-images";
+import React, { useCallback, useState } from "react";
+import Photos from './components/Photos';
+import {getPhotos, deletePhoto} from './api';
 import InfiniteScroll from 'react-infinite-scroller';
-import Header from './components/Header';
-
-async function photos(page) {
-  const server = process.env.NODE_ENV === 'production' ? '' : "http://localhost:9393"
-  const response = await fetch(server + '/all?page=' + page);
-  const all = await response.json();
-  return all;
-}
-
-async function deletePhoto(img) {
-  const response = await fetch(img.src, { method: 'DELETE'});
-  return response;
-}
+import {List} from 'immutable';
 
 function App() {
-  const [currentPage, setCurrentPage] = useState(0);
-  const [currentPhotos, setCurrentPhotos] = useState([]);
-  const [currentImage, setCurrentImage] = useState(0);
-  const [viewerIsOpen, setViewerIsOpen] = useState(false);
+  const [pages, setPages] = useState(List.of());
+  const [paging, setPaging] = useState({has_next: true});
 
-  const loadPhotos = useCallback((page) => {
-    photos(page).then((data) => {
-      setCurrentPhotos(c => c.concat(...data.records));
-      if (data.page.has_next) {
-        setCurrentPage(p => p+1);
-      } else {
-        setCurrentPage(null);
-      }
+  const loadFunc = (index) => {
+    console.log("Called", {index})
+    getPhotos(index).then(({records, page}) => {
+      setPages(p => p.push(List.of(...records)));
+      setPaging(page);
     }).catch(console.error.bind(console));
-  }, [])
+  }
 
-  const openLightbox = useCallback((event, { photo, index }) => {
-    setCurrentImage(index);
-    setViewerIsOpen(true);
-  }, []);
-
-  const closeLightbox = useCallback(() => {
-    setCurrentImage(0);
-    setViewerIsOpen(false);
-  }, []);
-
-  const deleteCurrentPhoto = useCallback(() => {
-    const currentPhoto = currentPhotos[currentImage];
+  const onDelete = useCallback((currentPage) => (photoIndex) => {
+    const currentPhoto = pages.get(currentPage).get(photoIndex);
     const toBeDeleted = window.confirm(`Delete photo ${currentPhoto.title}?`)
-    closeLightbox();
     if (toBeDeleted) {
-      deletePhoto(currentPhotos[currentImage]).then(() => {
-        // Need to create a new array, since Gallery is memoized. Would be an issue for bigger galleries.
-        const photosWithoutCurrent = currentPhotos.slice(0, currentImage).concat(...currentPhotos.slice(currentImage+1, currentPhotos.length));
-        setCurrentPhotos(photosWithoutCurrent);
+      deletePhoto(currentPhoto).then(() => {
+        setPages(pages.set(currentPage, pages.get(currentPage).delete(photoIndex)));
       }).catch(console.error.bind(console));
     }
-  }, [currentImage, currentPhotos, closeLightbox]);
+  }, [pages]);
 
-  const viewer = viewerIsOpen ? (
-      <Modal onClose={closeLightbox}>
-      <Carousel
-        components={{ Footer: null, NavigationPrev: null, Navigation: null, Header: Header(deleteCurrentPhoto) }}
-        currentIndex={currentImage}
-        views={currentPhotos.map((x, idx) => ({
-          ...x,
-          src: idx === currentImage ? x.original : x.src,
-          srcset: x.srcSet,
-          caption: x.title
-        }))}
-        />
-    </Modal>
-  ) : null
+
+  const items = pages.map((items, index) => <Photos key={index} photos={items.toArray()} onDelete={onDelete(index)} />);
 
   return (
-    <div>
-      <InfiniteScroll
-        pageStart={-1}
-        loadMore={loadPhotos}
-        hasMore={currentPage !== null}
-        loader={<div className="loader" key={0}>Loading ...</div>}
-        >
-        <Gallery photos={currentPhotos} onClick={openLightbox} />
-      </InfiniteScroll>
-      <ModalGateway>
-        {viewer}
-      </ModalGateway>
-    </div>
+    <InfiniteScroll
+      pageStart={-1}
+      loadMore={loadFunc}
+      hasMore={paging.has_next}
+      loader={<div className="loader" key={0}>Loading ...</div>}
+    >
+      {items}
+    </InfiniteScroll>
   );
 }
 export default App;
