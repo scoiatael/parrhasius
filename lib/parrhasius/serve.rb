@@ -28,6 +28,11 @@ module Parrhasius
       File.delete(full_path(thumb))
     end
 
+    def set(basename)
+      thumb = @by_basename.fetch(basename).path
+      `feh --bg-max #{full_path(thumb)}`
+    end
+
     private
 
     def full_path(path)

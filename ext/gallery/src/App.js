@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react";
 import Photos from './components/Photos';
-import {getPhotos, deletePhoto} from './api';
+import {getPhotos, deletePhoto, likePhoto} from './api';
 import InfiniteScroll from 'react-infinite-scroller';
 import {List} from 'immutable';
 
@@ -27,7 +27,7 @@ function App() {
   }, [pages]);
 
 
-  const items = pages.map((items, index) => <Photos key={index} photos={items.toArray()} onDelete={onDelete(index)} />);
+  const items = pages.map((items, index) => <Photos key={index} photos={items.toArray()} onDelete={onDelete(index)} onLike={likePhoto} />);
 
   return (
     <InfiniteScroll

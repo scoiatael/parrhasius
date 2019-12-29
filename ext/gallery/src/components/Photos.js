@@ -3,7 +3,7 @@ import Gallery from "react-photo-gallery";
 import Carousel, { Modal, ModalGateway } from "react-images";
 import Header from './Header';
 
-function Photos({photos, onDelete}) {
+function Photos({photos, onDelete, onLike}) {
   const [currentImage, setCurrentImage] = useState(0);
   const [viewerIsOpen, setViewerIsOpen] = useState(false);
 
@@ -22,10 +22,15 @@ function Photos({photos, onDelete}) {
     closeLightbox();
   }, [currentImage, closeLightbox, onDelete]);
 
+  const likeCurrentPhoto = useCallback(() => {
+    onLike(photos[currentImage]);
+    closeLightbox();
+  }, [currentImage, closeLightbox, onLike, photos]);
+
   const viewer = viewerIsOpen ? (
       <Modal onClose={closeLightbox}>
       <Carousel
-        components={{ Footer: null, NavigationPrev: null, Navigation: null, Header: Header(deleteCurrentPhoto) }}
+        components={{ Footer: null, NavigationPrev: null, Navigation: null, Header: Header(deleteCurrentPhoto, likeCurrentPhoto) }}
         currentIndex={currentImage}
         views={photos.map((x, idx) => ({
           ...x,

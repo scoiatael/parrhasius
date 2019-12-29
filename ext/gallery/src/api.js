@@ -13,6 +13,11 @@ export async function deletePhoto(img) {
   return response;
 }
 
+export async function likePhoto(img) {
+  const response = await fetch(img.src, { method: 'PUT'});
+  return response;
+}
+
 export async function getPages() {
   const response = await fetch(server() + '/pages');
   const all = await response.json();

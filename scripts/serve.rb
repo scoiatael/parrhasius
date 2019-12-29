@@ -46,12 +46,6 @@ get '/all' do
   )
 end
 
-get '/pages' do
-  data = serve.all
-  page = Parrhasius::Serve::Page.new(size: 200, current: 0, total: data.size)
-  JSON.dump(page.to_h)
-end
-
 get '/image_full/:id' do |id|
   cache_control :public
   etag id
@@ -74,7 +68,7 @@ end
 
 options '/image/:id' do
   headers(
-    'Access-Control-Allow-Methods' => 'OPTIONS, GET, DELETE'
+    'Access-Control-Allow-Methods' => 'OPTIONS, GET, DELETE, PUT'
   )
   status 204
   []
@@ -82,6 +76,12 @@ end
 
 delete '/image/:id' do |id|
   serve.delete(id)
+
+  'OK'
+end
+
+put '/image/:id' do |id|
+  serve.set(id)
 
   'OK'
 end

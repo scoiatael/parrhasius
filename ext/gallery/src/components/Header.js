@@ -5,9 +5,9 @@
 import glam from 'glam';
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTimes, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
+import { faTimes, faTrashAlt, faHeart } from '@fortawesome/free-solid-svg-icons'
 
-export const Header = (onDelete) => ({ modalProps: {onClose}, data: {title} }) => (
+export const Header = (onDelete, onLike) => ({ modalProps: {onClose}, data: {title} }) => (
     <div
       css={{
         alignItems: 'center',
@@ -37,6 +37,11 @@ export const Header = (onDelete) => ({ modalProps: {onClose}, data: {title} }) =
         display: 'flex ',
         zIndex: 1,
       }}>
+    <Button
+  onClick={onLike}
+    >
+    <FontAwesomeIcon icon={faHeart} />
+    </Button>
         <Button
           onClick={onDelete}
         >
