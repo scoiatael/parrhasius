@@ -2,12 +2,13 @@ import React, { useState, useCallback } from "react";
 import Gallery from "react-photo-gallery";
 import Carousel, { Modal, ModalGateway } from "react-images";
 import Header from './Header';
+import Image from './Image';
 
 function Photos({photos, onDelete, onLike}) {
   const [currentImage, setCurrentImage] = useState(0);
   const [viewerIsOpen, setViewerIsOpen] = useState(false);
 
-  const openLightbox = useCallback((event, { photo, index }) => {
+  const openLightbox = useCallback(index => {
     setCurrentImage(index);
     setViewerIsOpen(true);
   }, []);
@@ -44,7 +45,7 @@ function Photos({photos, onDelete, onLike}) {
 
   return (
     <div>
-      <Gallery photos={photos} onClick={openLightbox} />
+      <Gallery photos={photos} onClick={openLightbox} renderImage={Image(openLightbox)}/>
       <ModalGateway>
         {viewer}
       </ModalGateway>

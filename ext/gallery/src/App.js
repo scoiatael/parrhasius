@@ -9,7 +9,7 @@ function App() {
   const [paging, setPaging] = useState({has_next: true});
 
   const loadFunc = (index) => {
-    console.log("Called", {index})
+    console.log("Loading", {index})
     getPhotos(index).then(({records, page}) => {
       setPages(p => p.push(List.of(...records)));
       setPaging(page);
