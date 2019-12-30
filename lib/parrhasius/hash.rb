@@ -20,7 +20,7 @@ module Parrhasius
 
     def call(filename)
       h = ExtHash(filename)
-      raise CallErr, h[:error] unless h[:error].nil?
+      raise CallErr, "on #{filename}: #{h[:error]}" unless h[:error].nil?
 
       h[:value]
     end
