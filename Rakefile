@@ -35,10 +35,12 @@ desc 'Download images from given URLs'
 task :download do
   ARGV.shift
   ruby 'scripts/download.rb', *ARGV
+  ARGV.each { |a| task(a.to_s) {} }
 end
 
 desc 'Merge given wallpaper folders into one'
 task :merge do
   ARGV.shift
   ruby 'scripts/merge_into.rb', *ARGV
+  ARGV.each { |a| task(a.to_s) {} }
 end
