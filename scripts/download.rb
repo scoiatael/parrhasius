@@ -8,6 +8,8 @@ def downloader(source)
     Parrhasius::Downloaders::FourChan
   when /soup/
     Parrhasius::Downloaders::Soup
+  when /joemonster/
+    Parrhasius::Downloaders::Joemonster
   else
     raise StandardError, "unexpected source: #{source}"
   end

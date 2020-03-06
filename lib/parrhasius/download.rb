@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
-require_relative 'downloaders/fourchan'
-require_relative 'downloaders/soup'
+Dir[__dir__ + '/downloaders/*.rb'].each do |f|
+  require_relative f
+end
 
 module Parrhasius
   class Download

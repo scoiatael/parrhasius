@@ -12,6 +12,7 @@ gem 'sinatra'
 gem 'faraday-cookie_jar'
 gem 'faraday'
 gem 'faraday_middleware'
+gem 'down'
 
 group :development do
   gem 'pry-byebug'
