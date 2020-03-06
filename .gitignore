@@ -1,4 +1,6 @@
 /db/
 /lib/parrhasius.h
 /lib/parrhasius.so
+/.bundle/
+/vendor/
 

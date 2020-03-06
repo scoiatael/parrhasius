@@ -76,7 +76,7 @@ module Parrhasius
           raise StandardError, "Unexpected status #{r.status}" unless r.status == 302
 
           url = r['Location']
-          cookies = r['set-cookie'].sub(',', ';') # For weird reasons Faraday joins headers with ,
+          cookies = r['set-cookie'].sub(',', ';') if r['set-cookie'] # For weird reasons Faraday joins headers with ,
         end
         raise StandardError, "Too many redirects"
       end

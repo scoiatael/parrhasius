@@ -28,6 +28,7 @@ end
 
 task :compile do
   Dir.chdir File.expand_path('ext/parrhasius', __dir__)
+  ENV.delete("GOPATH")
   sh 'go build -o ../../lib/parrhasius.so -buildmode=c-shared main.go'
 end
 
