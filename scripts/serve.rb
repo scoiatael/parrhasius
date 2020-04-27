@@ -5,12 +5,20 @@ require 'rack/cache'
 
 require_relative '../lib/parrhasius/serve'
 
-serve = Parrhasius::Serve.new(File.expand_path(ENV['SERVE'] || './db/staging'))
+dir = File.expand_path(ENV['SERVE'] || './db/staging')
+serve = Parrhasius::Serve.new(dir)
 options = {
   base_path: ''
 }
 
+require 'logger'
+
+logger = Logger.new(STDOUT)
+logger.level = Logger::DEBUG
+
 use Rack::Cache
+
+logger.info "Serving #{dir}"
 
 if ENV['APP_ENV'] == 'production'
   set :public_folder, 'ext/gallery/build'
