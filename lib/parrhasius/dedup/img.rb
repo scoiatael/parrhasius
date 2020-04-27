@@ -11,6 +11,8 @@ module Parrhasius
 
       def hash!
         @hash = do_hash(path)
+      rescue
+        @hash = nil
       end
 
       private
