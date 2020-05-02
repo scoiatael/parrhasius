@@ -45,3 +45,12 @@ task :merge do
   ruby 'scripts/merge_into.rb', *ARGV
   ARGV.each { |a| task(a.to_s) {} }
 end
+
+desc 'Output systemd service file'
+task :service do
+  require 'erb'
+  filename = 'parrhasius.service.erb'   # 'arg1' and 'arg2' are used in example.rhtml
+  erb = ERB.new(File.read(filename))
+  erb.filename = filename
+  puts erb.result
+end
