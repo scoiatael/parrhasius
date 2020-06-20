@@ -23,7 +23,7 @@ module Parrhasius
     end
 
     def delete(basename)
-      thumb = @by_basename.fetch(basename).path
+      thumb = @by_basename.delete(basename).path
       File.delete(thumb)
       File.delete(full_path(thumb))
     end
