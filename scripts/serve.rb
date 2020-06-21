@@ -3,10 +3,12 @@
 require 'sinatra'
 require 'rack/cache'
 
-require_relative '../lib/parrhasius/serve'
+require_relative '../lib/parrhasius/folder_server'
+require_relative '../lib/parrhasius/image_server'
 
-dir = File.expand_path(ENV['SERVE'] || './db/staging')
-serve = Parrhasius::Serve.new(dir)
+dir = File.expand_path(ENV['SERVE'] || './db')
+serve = Parrhasius::FolderServer.new(dir)
+image_servers = Hash.new { |s, folder_id| s[folder_id] = Parrhasius::ImageServer.new(serve.by_id(folder_id)) }
 options = {
   base_path: ''
 }
@@ -37,44 +39,59 @@ else
 end
 
 get '/all' do
-  data = serve.all
-  page = Parrhasius::Serve::Page.new(size: 200, current: Integer(params[:page] || '0'), total: data.size)
+  children = serve.all
+  content_type 'application/json'
+  JSON.dump(children)
+end
+
+get '/folder/:folder_id/all' do |folder_id|
+  data = image_servers[folder_id].all
+  page = Parrhasius::ImageServer::Page.new(size: 200, current: Integer(params[:page] || '0'), total: data.size)
   records = data[page.start...page.end]&.map do |t|
     {
-      src: options[:base_path] + '/image/' + File.basename(t.path),
+      src: options[:base_path] + "/folder/#{folder_id}/image/" + File.basename(t.path),
       width: t.width,
       height: t.height,
-      original: options[:base_path] + '/image_full/' + File.basename(t.path),
+      original: options[:base_path] + "/folder/#{folder_id}/image_full/" + File.basename(t.path),
       title: File.basename(t.path)
     }
   end
+  content_type 'application/json'
   JSON.dump(
     records: records || [],
     page: page.to_h
   )
+rescue KeyError => e
+  content_type 'application/json'
+  status 500
+  JSON.dump({
+    error: e,
+    folder_id: folder_id,
+    folder_ids: serve.all.keys
+  })
 end
 
-get '/image_full/:id' do |id|
+get '/folder/:folder_id/image_full/:id' do |folder_id, id|
   cache_control :public
-  etag id
+  etag [folder_id, id].join('-')
 
-  thumbnail = serve.by_basename(id)
-  img = serve.full(thumbnail.path)
+  thumbnail = image_servers[folder_id].by_basename(id)
+  img = image_servers[folder_id].full(thumbnail.path)
 
   content_type img.mime_type
   send_file img.path
 end
 
-get '/image/:id' do |id|
+get '/folder/:folder_id/image/:id' do |folder_id, id|
   cache_control :public
-  etag id
+  etag [folder_id, id].join('-')
 
-  img = serve.by_basename(id)
+  img = image_servers[folder_id].by_basename(id)
   content_type img.mime_type
   send_file img.path
 end
 
-options '/image/:id' do
+options '/folder/:folder_id/image/:id' do
   headers(
     'Access-Control-Allow-Methods' => 'OPTIONS, GET, DELETE, PUT'
   )
@@ -82,14 +99,14 @@ options '/image/:id' do
   []
 end
 
-delete '/image/:id' do |id|
-  serve.delete(id)
+delete '/folder/:folder_id/image/:id' do |folder_id, id|
+  image_servers[folder_id].delete(id)
 
   'OK'
 end
 
-put '/image/:id' do |id|
-  serve.set(id)
+put '/folder/:folder_id/image/:id' do |folder_id, id|
+  image_servers[folder_id].set(id)
 
   'OK'
 end

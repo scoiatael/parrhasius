@@ -2,8 +2,18 @@ function server() {
   return process.env.NODE_ENV === 'production' ? '' : "http://localhost:9393"
 }
 
-export async function getPhotos(page) {
-  const response = await fetch(server() + '/all?page=' + page);
+export async function getFolders() {
+  const response = await fetch(server() + '/all');
+  const all = await response.json();
+  return all;
+}
+
+export async function getPhotos(folder_id, page) {
+  const response = await fetch(server() + '/folder/' + folder_id + '/all?page=' + page);
+  if (response.status !== 200) {
+    console.error(response);
+    throw new Error(`HTTP returned: ${response.status}`)
+  }
   const all = await response.json();
   return all;
 }
@@ -16,10 +26,4 @@ export async function deletePhoto(img) {
 export async function likePhoto(img) {
   const response = await fetch(img.src, { method: 'PUT'});
   return response;
-}
-
-export async function getPages() {
-  const response = await fetch(server() + '/pages');
-  const all = await response.json();
-  return all;
 }

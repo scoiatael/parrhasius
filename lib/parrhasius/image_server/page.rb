@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Parrhasius
-  class Serve
+  class ImageServer
     class Page
       attr_reader :start, :end
 
@@ -17,7 +17,7 @@ module Parrhasius
         {
           number: @current,
           has_next: @has_next,
-          next: @current + 1
+          next: @has_next ? @current + 1 : nil
         }
       end
     end
