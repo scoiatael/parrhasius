@@ -100,7 +100,8 @@ options '/folder/:folder_id/image/:id' do
 end
 
 delete '/folder/:folder_id/image/:id' do |folder_id, id|
-  image_servers[folder_id].delete(id)
+  thumbnail = image_servers[folder_id].delete(id)
+  serve.move_to_bin(thumbnail)
 
   'OK'
 end

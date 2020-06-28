@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'mini_magick'
+require 'pathname'
 require_relative 'image_server/page'
 
 module Parrhasius
@@ -23,9 +24,10 @@ module Parrhasius
     end
 
     def delete(basename)
-      thumb = @by_basename.delete(basename).path
-      File.delete(thumb)
-      File.delete(full_path(thumb))
+      @by_basename.delete(basename).path.tap do |thumbnail|
+        full = full_path(thumbnail)
+        File.delete(full) if full.exist?
+      end
     end
 
     def set(basename)
@@ -36,7 +38,7 @@ module Parrhasius
     private
 
     def full_path(path)
-      path.sub('thumbnail', 'original')
+      Pathname.new(path.sub('thumbnail', 'original'))
     end
   end
 end
