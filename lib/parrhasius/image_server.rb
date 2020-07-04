@@ -11,6 +11,10 @@ module Parrhasius
       @by_basename = Hash[thumbnails.map { |t| [File.basename(t.path), t] }]
     end
 
+    def first
+      @by_basename.values.first
+    end
+
     def all
       @by_basename.values
     end

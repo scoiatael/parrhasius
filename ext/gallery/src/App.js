@@ -1,7 +1,7 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import Folder from './components/Folder';
-import {getFolders} from './api';
-import {List, Map} from 'immutable';
+import { getFolders } from './api';
+import { List, Map } from 'immutable';
 import {
   HashRouter as Router,
   Switch,
@@ -44,13 +44,21 @@ function App() {
       setLoading(true);
       getFolders().then((folders) => {
         setLoaded(true);
-        setFolders(Map(folders).toSeq().sortBy(([_, v]) => v));
+        console.log(folders);
+        console.log(Map(folders).toSeq());
+        const sorted = Map(folders).toSeq().sortBy(({name}) => name);
+        setFolders(sorted);
       })
     }
   }
 
-
-  const links = folders.toArray().map(([k, v]) => <li key={k}><Link to={"/folders/"+k}>{v}</Link></li>);
+  const links = folders.toArray().map(([k, {name}]) => <li key={k}><Link to={"/folders/" + k}>{name}</Link></li>);
+  const bodyLinks = folders.toArray().map(([k, {name, avatar}]) =>
+    <li class="collection-item avatar">
+      <img src={avatar} alt="" class="circle" />
+      <Link to={"/folders/" + k} key={k} className="title">{name}</Link>
+    </li>
+  );
   const initSidenav = (el) => {
     if (el) {
       window.M.Sidenav.init(el);
@@ -70,7 +78,7 @@ function App() {
           </div>
         </nav>
 
-      <ul className="sidenav" ref={initSidenav} id="sidenav">
+        <ul className="sidenav" ref={initSidenav} id="sidenav">
           {links}
         </ul>
 
@@ -80,9 +88,13 @@ function App() {
           </Route>
 
           <Route path="/">
-            <ul>
-              {links}
-            </ul>
+            <div class="container">
+              <div class="row">
+                <div class="col s12 collection">
+                  {bodyLinks}
+                </div>
+              </div>
+            </div>
           </Route>
         </Switch>
       </div>

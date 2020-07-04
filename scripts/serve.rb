@@ -38,8 +38,12 @@ else
   end
 end
 
+def src_url(base_path, folder_id, img)
+  base_path + "/folder/#{folder_id}/image/" + File.basename(img.path)
+end
+
 get '/all' do
-  children = serve.all
+  children = serve.all.map { |k, v| [k, {name: v, avatar: src_url(options[:base_path], k, image_servers[k].first)}]} .to_h
   content_type 'application/json'
   JSON.dump(children)
 end
@@ -49,7 +53,7 @@ get '/folder/:folder_id/all' do |folder_id|
   page = Parrhasius::ImageServer::Page.new(size: 200, current: Integer(params[:page] || '0'), total: data.size)
   records = data[page.start...page.end]&.map do |t|
     {
-      src: options[:base_path] + "/folder/#{folder_id}/image/" + File.basename(t.path),
+      src: src_url(options[:base_path], folder_id, t),
       width: t.width,
       height: t.height,
       original: options[:base_path] + "/folder/#{folder_id}/image_full/" + File.basename(t.path),
