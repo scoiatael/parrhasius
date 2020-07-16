@@ -187,6 +187,16 @@
     };
     version = "1.1.1";
   };
+  nio4r = {
+    groups = ["default"];
+    platforms = [];
+    source = {
+      remotes = ["https://rubygems.org"];
+      sha256 = "0gnmvbryr521r135yz5bv8354m7xn6miiapfgpg1bnwsvxz8xj6c";
+      type = "gem";
+    };
+    version = "2.5.2";
+  };
   nokogiri = {
     dependencies = ["mini_portile2"];
     groups = ["default"];
@@ -250,6 +260,17 @@
       type = "gem";
     };
     version = "4.0.3";
+  };
+  puma = {
+    dependencies = ["nio4r"];
+    groups = ["default"];
+    platforms = [];
+    source = {
+      remotes = ["https://rubygems.org"];
+      sha256 = "0cly51sqlz4ydpi5cshbrgjqgmysy26yca01lpnvhqvfvb4y9gl8";
+      type = "gem";
+    };
+    version = "4.3.5";
   };
   rack = {
     groups = ["default" "development"];
