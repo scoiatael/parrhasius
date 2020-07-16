@@ -1,14 +1,16 @@
 # frozen_string_literal: true
 
 require 'sinatra'
+configure { set :server, :puma }
 require 'rack/cache'
 
+require_relative '../lib/parrhasius'
 require_relative '../lib/parrhasius/folder_server'
 require_relative '../lib/parrhasius/image_server'
 
 dir = File.expand_path(ENV['SERVE'] || './db')
 serve = Parrhasius::FolderServer.new(dir)
-image_servers = Hash.new { |s, folder_id| s[folder_id] = Parrhasius::ImageServer.new(serve.by_id(folder_id)) }
+image_servers = ::Hash.new { |s, folder_id| s[folder_id] = Parrhasius::ImageServer.new(serve.by_id(folder_id)) }
 options = {
   base_path: ''
 }
@@ -114,4 +116,66 @@ put '/folder/:folder_id/image/:id' do |folder_id, id|
   image_servers[folder_id].set(id)
 
   'OK'
+end
+
+options '/downloads' do
+  headers(
+    'Access-Control-Allow-Methods' => 'OPTIONS, GET, POST',
+    'Access-Control-Allow-Headers' => 'Content-Type, Content-Length'
+  )
+  status 204
+  []
+end
+
+class StreamingProgressBar
+  def initialize(stage, stream)
+    @stage = stage
+    @stream = stream
+    @title = nil
+    @total = nil
+    @progress = nil
+  end
+
+  def create(title:, total:, format:)
+    @title = title
+    @total = total
+    @progress = 0
+    out(:start)
+    self
+  end
+
+  def increment
+    @progress += 1
+    out(:increment)
+  end
+
+  def finish
+    out(:done)
+  end
+
+  private
+
+  def out(status)
+    @stream << JSON.dump(stage: @stage, status: status, progress: @progress, total: @total, title: @title) + ','
+  end
+end
+
+post '/downloads' do 
+  payload = JSON.parse(request.body.read)
+  url = payload.fetch('url')
+
+  logger.info "Received download request #{payload}"
+
+  stream do |out|
+    out << '{ "events":['
+    storage = Parrhasius::Storage.new(['db', Time.now.to_i, 'original'].join('/'))
+    download_pb = StreamingProgressBar.new(:downloading, out)
+    Parrhasius::Download.new(Parrhasius::Download.for(url), storage, download_pb).run(url)
+    dedup_pb = StreamingProgressBar.new(:deduping, out)
+    Parrhasius::Dedup.new(db: 'db/index.pstore', dir: storage.dir, progress_bar: dedup_pb).run
+    minify_pb = StreamingProgressBar.new(:minifying, out)
+    Parrhasius::Minify.new(minify_pb).run(src: storage.dir, dest: storage.dir.sub('original', 'thumbnail'))
+    serve.refresh!
+    out << JSON.dump(done: true) + ']}'
+  end
 end

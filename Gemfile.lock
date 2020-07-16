@@ -28,6 +28,7 @@ GEM
     multipart-post (2.1.1)
     mustermann (1.1.1)
       ruby2_keywords (~> 0.0.1)
+    nio4r (2.5.2)
     nokogiri (1.10.9)
       mini_portile2 (~> 2.4.0)
     parallel (1.19.1)
@@ -40,6 +41,8 @@ GEM
       byebug (~> 11.0)
       pry (~> 0.10)
     public_suffix (4.0.3)
+    puma (4.3.5)
+      nio4r (~> 2.0)
     rack (2.2.3)
     rack-cache (1.11.0)
       rack (>= 0.4)
@@ -84,6 +87,7 @@ DEPENDENCIES
   mini_magick
   nokogiri
   pry-byebug
+  puma
   rack-cache
   rake
   rubocop

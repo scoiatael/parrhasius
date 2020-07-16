@@ -13,6 +13,7 @@ gem 'faraday-cookie_jar'
 gem 'faraday'
 gem 'faraday_middleware'
 gem 'down'
+gem 'puma'
 
 group :development do
   gem 'pry-byebug'

@@ -5,6 +5,10 @@ require 'fileutils'
 
 module Parrhasius
   class Minify
+    def initialize(progress_bar)
+      @progress_bar = progress_bar
+    end
+
     def run(src:, dest:)
       FileUtils.mkdir_p(dest)
 
@@ -14,7 +18,7 @@ module Parrhasius
 
       pool = Concurrent::FixedThreadPool.new(Concurrent.processor_count)
 
-      pb = ProgressBar.create(title: 'Resizing', total: files.size, format: "%t (%c/%C): |\e[0;36m%B\e[0m| %E")
+      pb = @progress_bar.create(title: 'Resizing', total: files.size, format: "%t (%c/%C): |\e[0;36m%B\e[0m| %E")
       cpb = Concurrent::MVar.new(pb)
       promises = files.map do |f|
         Concurrent::Promise.execute(executor: pool) do

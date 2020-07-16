@@ -8,7 +8,7 @@ module Parrhasius
   class ImageServer
     def initialize(dir)
       thumbnails = Dir["#{dir}/thumbnail/*"].map { |p| MiniMagick::Image.new(p) }
-      @by_basename = Hash[thumbnails.map { |t| [File.basename(t.path), t] }]
+      @by_basename = ::Hash[thumbnails.map { |t| [File.basename(t.path), t] }]
     end
 
     def first

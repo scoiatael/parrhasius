@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import Folder from './components/Folder';
+import DownloadButton from './components/DownloadButton';
+import DownloadStatus from './components/DownloadStatus';
 import { getFolders } from './api';
 import { List, Map } from 'immutable';
 import {
@@ -8,7 +10,7 @@ import {
   Route,
   Link,
   useRouteMatch,
-  useParams
+  useParams,
 } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faList } from '@fortawesome/free-solid-svg-icons'
@@ -35,34 +37,44 @@ function Folders() {
   );
 }
 
+function initSidenav(el) {
+  if (el) {
+    window.M.Sidenav.init(el);
+  }
+}
+
 function App() {
   const [loading, setLoading] = useState(false);
   const [loaded, setLoaded] = useState(false);
-  const [folders, setFolders] = useState(List.of());
   if (!loaded) {
     if (!loading) {
       setLoading(true);
       getFolders().then((folders) => {
         setLoaded(true);
-        console.log(folders);
-        console.log(Map(folders).toSeq());
         const sorted = Map(folders).toSeq().sortBy(({name}) => name);
         setFolders(sorted);
       })
     }
   }
+  const [downloading, setDownload] = useState(null);
+  const [folders, setFolders] = useState(List.of());
 
   const links = folders.toArray().map(([k, {name}]) => <li key={k}><Link to={"/folders/" + k}>{name}</Link></li>);
   const bodyLinks = folders.toArray().map(([k, {name, avatar}]) =>
-    <li class="collection-item avatar">
-      <img src={avatar} alt="" class="circle" />
-      <Link to={"/folders/" + k} key={k} className="title">{name}</Link>
-    </li>
-  );
-  const initSidenav = (el) => {
-    if (el) {
-      window.M.Sidenav.init(el);
-    }
+                                          <li key={k} className="collection-item avatar">
+                                            <img src={avatar} alt="" className="circle" />
+                                            <Link to={"/folders/" + k} className="title">{name}</Link>
+                                          </li>
+                                         );
+
+  const download = () => {
+    const url = prompt('URL?', 'https://boards.4chan.org/wg/...');
+    setDownload(url);
+  }
+
+  const refresh = () => {
+    setLoading(false);
+    setLoaded(false);
   }
 
   return (
@@ -74,6 +86,9 @@ function App() {
             <Link to="/" className="brand-logo">Parrhasius</Link>
             <ul id="nav-mobile" className="right hide-on-med-and-down">
               {links}
+            </ul>
+            <ul className="right">
+              <li><DownloadButton onClick={download}/></li>
             </ul>
           </div>
         </nav>
@@ -87,10 +102,14 @@ function App() {
             <Folders />
           </Route>
 
+          <Route path="/downloads">
+            <DownloadStatus url={downloading} onDone={refresh}/>
+          </Route>
+
           <Route path="/">
-            <div class="container">
-              <div class="row">
-                <div class="col s12 collection">
+            <div className="container">
+              <div className="row">
+                <div className="col s12 collection">
                   {bodyLinks}
                 </div>
               </div>

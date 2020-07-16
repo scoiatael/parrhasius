@@ -10,6 +10,10 @@ module Parrhasius
       @parent = Pathname.new(dir)
       @bin = @parent / "recycle_bin"
       @bin.mkdir unless @bin.exist?
+      refresh!
+    end
+
+    def refresh!
       @children = @parent.children.select { |p| p.directory? && valid?(p) } .map { |p| [Digest::SHA2.new(256).hexdigest(p.realpath.to_s), p.relative_path_from(@parent)] }.to_h
     end
 

@@ -1,3 +1,5 @@
+import oboe from "oboe";
+
 function server() {
   return process.env.NODE_ENV === 'production' ? '' : "http://localhost:9393"
 }
@@ -26,4 +28,18 @@ export async function deletePhoto(img) {
 export async function likePhoto(img) {
   const response = await fetch(img.src, { method: 'PUT'});
   return response;
+}
+
+export function download(url) {
+  const data = {
+    url: url
+  };
+  return oboe({
+    url: server() + "/downloads",
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: data,
+  });
 }

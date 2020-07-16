@@ -11,7 +11,7 @@ module Parrhasius
   class Dedup
     attr_reader :dir, :db, :imgs
 
-    def initialize(dir:, db:)
+    def initialize(dir:, db:, progress_bar:)
       @dir = dir
       @db = db
 
@@ -23,7 +23,7 @@ module Parrhasius
         Img.new(file)
       end
 
-      @pb = PB.new
+      @pb = PB.new(progress_bar)
     end
 
     def hash!

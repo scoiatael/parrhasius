@@ -20,12 +20,13 @@ module Parrhasius
       end
     end
 
-    def initialize
+    def initialize(progress_bar)
       @color = 32
+      @progress_bar = progress_bar
     end
 
     def create(**opts)
-      ProgressBar.create(format: format, **opts)
+      @progress_bar.create(format: format, **opts)
     end
 
     def around(arr, **opts)

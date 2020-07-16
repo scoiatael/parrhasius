@@ -2,7 +2,7 @@
 
 desc 'Start dev web server'
 task :'dev-webserver' do
-  sh 'shotgun scripts/serve.rb'
+  ruby 'scripts/serve.rb', '-p 9393'
 end
 
 desc 'Start dev frontend reloader'
