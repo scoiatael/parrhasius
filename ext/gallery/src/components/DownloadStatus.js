@@ -54,7 +54,7 @@ function DownloadStatus({url, onDone}) {
         <div className="container">
           <div className="row">
             <div className="col s12">
-              <p>Downloading {url}</p>
+              <p><a href={url}>{url}</a></p>
             </div>
             {status_ps}
           </div>

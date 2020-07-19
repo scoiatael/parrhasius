@@ -10,11 +10,14 @@ module Parrhasius
       @parent = Pathname.new(dir)
       @bin = @parent / "recycle_bin"
       @bin.mkdir unless @bin.exist?
+      @semaphore = Mutex.new
       refresh!
     end
 
     def refresh!
-      @children = @parent.children.select { |p| p.directory? && valid?(p) } .map { |p| [Digest::SHA2.new(256).hexdigest(p.realpath.to_s), p.relative_path_from(@parent)] }.to_h
+      synchronize do
+        @children = @parent.children.select { |p| p.directory? && valid?(p) } .map { |p| [Digest::SHA2.new(256).hexdigest(p.realpath.to_s), p.relative_path_from(@parent)] }.to_h
+      end
     end
 
     def all
@@ -26,18 +29,24 @@ module Parrhasius
     end
 
     def move_to_bin(path)
-      path = Pathname.new(path)
-      new_path = @bin / path.basename
+      synchronize do
+        path = Pathname.new(path)
+        new_path = @bin / path.basename
 
-      Parrhasius::Log.info("Rename #{path} -> #{new_path}")
+        Parrhasius::Log.info("Rename #{path} -> #{new_path}")
 
-      path.rename(new_path)
+        path.rename(new_path)
+      end
     end
 
     private
 
     def valid?(p)
        p.join('thumbnail').exist? && p.join('original').exist?
+    end
+
+    def synchronize(&block)
+      @semaphore.synchronize(&block)
     end
   end
 end

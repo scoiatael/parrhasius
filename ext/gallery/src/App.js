@@ -85,7 +85,7 @@ function App() {
             <div data-target="sidenav" className="sidenav-trigger"><FontAwesomeIcon icon={faList} /></div>
             <Link to="/" className="brand-logo">Parrhasius</Link>
             <ul id="nav-mobile" className="right hide-on-med-and-down">
-              {links}
+              {links.slice(-6)}
             </ul>
             <ul className="right">
               <li><DownloadButton onClick={download}/></li>

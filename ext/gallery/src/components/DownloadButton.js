@@ -9,8 +9,8 @@ function DownloadButton({onClick}) {
     const history = useHistory();
 
     const download = () => {
-        history.push("/downloads");
         onClick();
+        history.push("/downloads");
     }
     return (
         <button className="btn-floating green" onClick={download}><FontAwesomeIcon icon={faCloudDownloadAlt} /></button>
