@@ -10,7 +10,6 @@ require_relative '../lib/parrhasius/image_server'
 
 dir = File.expand_path(ENV['SERVE'] || './db')
 serve = Parrhasius::FolderServer.new(dir)
-image_servers = ::Hash.new { |s, folder_id| s[folder_id] = Parrhasius::ImageServer.new(serve.by_id(folder_id)) }
 options = {
   base_path: ''
 }
@@ -41,17 +40,17 @@ else
 end
 
 def src_url(base_path, folder_id, img)
-  base_path + "/folder/#{folder_id}/image/" + File.basename(img.path)
+  base_path + "/folder/#{folder_id}/image/" + File.basename(img.path) unless img.nil?
 end
 
 get '/all' do
-  children = serve.all.map { |k, v| [k, {name: v, avatar: src_url(options[:base_path], k, image_servers[k].first)}]} .to_h
+  children = serve.all.map { |k, v| [k, {name: v, avatar: src_url(options[:base_path], k, serve.by_id[k].first)}]} .to_h
   content_type 'application/json'
   JSON.dump(children)
 end
 
-get '/folder/:folder_id/all' do |folder_id|
-  data = image_servers[folder_id].all
+get '/folder/:folder_id' do |folder_id|
+  data = serve.by_id[folder_id].all
   page = Parrhasius::ImageServer::Page.new(size: 200, current: Integer(params[:page] || '0'), total: data.size)
   records = data[page.start...page.end]&.map do |t|
     {
@@ -77,12 +76,64 @@ rescue KeyError => e
   })
 end
 
+options '/folder/:folder_id' do
+  headers(
+    'Access-Control-Allow-Methods' => 'OPTIONS, GET, DELETE'
+  )
+  status 204
+  []
+end
+
+delete '/folder/:folder_id' do |folder_id|
+  src = serve.by_id[folder_id]
+
+  src.ids.each do |id| 
+    thumbnail = src.delete(id)
+    serve.move_to_bin(thumbnail)
+  end
+
+  FileUtils.rm_r(src.dir)
+  serve.refresh!
+
+  'OK'
+end
+
+options '/folder/:folder_id/merge' do
+  headers(
+    'Access-Control-Allow-Methods' => 'POST'
+  )
+  status 204
+  []
+end
+
+post '/folder/:folder_id/merge' do |folder_id|
+  payload = JSON.parse(request.body.read)
+  target = payload.fetch('target')
+
+  logger.info "Received merge request #{payload}"
+
+  dst = Pathname.new(dir).join(target)
+  src = serve.by_id[folder_id]
+
+  dst.join('original').mkpath
+  dst.join('thumbnail').mkpath
+
+  src.ids.each do |id| 
+    src.move(id, dst)
+  end
+
+  FileUtils.rm_r(src.dir)
+  serve.refresh!
+
+  'OK'
+end
+
 get '/folder/:folder_id/image_full/:id' do |folder_id, id|
   cache_control :public
   etag [folder_id, id].join('-')
 
-  thumbnail = image_servers[folder_id].by_basename(id)
-  img = image_servers[folder_id].full(thumbnail.path)
+  thumbnail = serve.by_id[folder_id].by_basename(id)
+  img = serve.by_id[folder_id].full(thumbnail.path)
 
   content_type img.mime_type
   send_file img.path
@@ -92,7 +143,7 @@ get '/folder/:folder_id/image/:id' do |folder_id, id|
   cache_control :public
   etag [folder_id, id].join('-')
 
-  img = image_servers[folder_id].by_basename(id)
+  img = serve.by_id[folder_id].by_basename(id)
   content_type img.mime_type
   send_file img.path
 end
@@ -106,14 +157,14 @@ options '/folder/:folder_id/image/:id' do
 end
 
 delete '/folder/:folder_id/image/:id' do |folder_id, id|
-  thumbnail = image_servers[folder_id].delete(id)
+  thumbnail = serve.by_id[folder_id].delete(id)
   serve.move_to_bin(thumbnail)
 
   'OK'
 end
 
 put '/folder/:folder_id/image/:id' do |folder_id, id|
-  image_servers[folder_id].set(id)
+  serve.by_id[folder_id].set(id)
 
   'OK'
 end

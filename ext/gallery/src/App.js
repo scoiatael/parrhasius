@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import Folder from './components/Folder';
 import DownloadButton from './components/DownloadButton';
+import MergeButton from './components/MergeButton';
+import TrashButton from './components/TrashButton';
 import DownloadStatus from './components/DownloadStatus';
-import { getFolders } from './api';
+import { getFolders, mergeFolders, deleteFolder } from './api';
 import { List, Map } from 'immutable';
 import {
   HashRouter as Router,
@@ -59,14 +61,6 @@ function App() {
   const [downloading, setDownload] = useState(null);
   const [folders, setFolders] = useState(List.of());
 
-  const links = folders.toArray().map(([k, {name}]) => <li key={k}><Link to={"/folders/" + k}>{name}</Link></li>);
-  const bodyLinks = folders.toArray().map(([k, {name, avatar}]) =>
-                                          <li key={k} className="collection-item avatar">
-                                            <img src={avatar} alt="" className="circle" />
-                                            <Link to={"/folders/" + k} className="title">{name}</Link>
-                                          </li>
-                                         );
-
   const download = () => {
     const url = prompt('URL?', 'https://boards.4chan.org/wg/...');
     setDownload(url);
@@ -76,6 +70,30 @@ function App() {
     setLoading(false);
     setLoaded(false);
   }
+
+  const merge = (key) => {
+    const target = prompt('Merge with?', 'wallpapers');
+    mergeFolders(key, target).then(refresh);
+  }
+
+  const trash = (key, title) => {
+    const toBeDeleted = window.confirm(`Delete folder ${title}?`)
+    if (toBeDeleted) {
+      deleteFolder(key).then(refresh)
+    }
+  }
+
+  const links = folders.toArray().map(([k, {name}]) => <li key={k}><Link to={"/folders/" + k}>{name}</Link></li>);
+  const bodyLinks = folders.toArray().map(([k, {name, avatar}]) =>
+                                          <li key={k} className="collection-item avatar">
+                                            <img src={avatar} alt="" className="circle" />
+                                            <Link to={"/folders/" + k} className="title">{name}</Link>
+                                            <div className="secondary-content">
+                                              <MergeButton onClick={() => merge(k)}/>
+                                              <TrashButton onClick={() => trash(k, name)}/>
+                                            </div>
+                                          </li>
+                                         );
 
   return (
     <Router>

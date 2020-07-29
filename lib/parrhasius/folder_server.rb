@@ -6,6 +6,7 @@ require_relative 'log'
 
 module Parrhasius
   class FolderServer
+    attr_reader :by_id
     def initialize(dir)
       @parent = Pathname.new(dir)
       @bin = @parent / "recycle_bin"
@@ -17,15 +18,12 @@ module Parrhasius
     def refresh!
       synchronize do
         @children = @parent.children.select { |p| p.directory? && valid?(p) } .map { |p| [Digest::SHA2.new(256).hexdigest(p.realpath.to_s), p.relative_path_from(@parent)] }.to_h
+        @by_id = ::Hash.new { |s, folder_id| s[folder_id] = Parrhasius::ImageServer.new(_by_id(folder_id)) }
       end
     end
 
     def all
       @children
-    end
-
-    def by_id(folder_id)
-      @parent.realpath.join @children.fetch(folder_id)
     end
 
     def move_to_bin(path)
@@ -47,6 +45,10 @@ module Parrhasius
 
     def synchronize(&block)
       @semaphore.synchronize(&block)
+    end
+
+    def _by_id(folder_id)
+      @parent.realpath.join @children.fetch(folder_id)
     end
   end
 end
