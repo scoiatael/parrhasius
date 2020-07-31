@@ -49,6 +49,24 @@ get '/all' do
   JSON.dump(children)
 end
 
+get '/bundle/:folder_id' do |folder_id|
+  headers(
+    'Content-Disposition' => 'attachment',
+  )
+  content_type 'application/zip'
+
+  src = serve.by_id[folder_id]
+  t = src.to_archive
+
+  send_file t.path,
+            :type => 'application/zip',
+            :disposition => 'attachment',
+            :filename => File.basename(t.path),
+            :stream => false
+  t.close
+  t.unlink
+end
+
 get '/folder/:folder_id' do |folder_id|
   data = serve.by_id[folder_id].all
   page = Parrhasius::ImageServer::Page.new(size: 200, current: Integer(params[:page] || '0'), total: data.size)

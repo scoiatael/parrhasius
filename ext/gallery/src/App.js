@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import Folder from './components/Folder';
 import DownloadButton from './components/DownloadButton';
 import MergeButton from './components/MergeButton';
+import BundleButton from './components/BundleButton';
 import TrashButton from './components/TrashButton';
 import DownloadStatus from './components/DownloadStatus';
-import { getFolders, mergeFolders, deleteFolder } from './api';
+import { getFolders, mergeFolders, deleteFolder, bundleFolder } from './api';
 import { List, Map } from 'immutable';
 import {
   HashRouter as Router,
@@ -90,6 +91,7 @@ function App() {
                                             <Link to={"/folders/" + k} className="title">{name}</Link>
                                             <div className="secondary-content">
                                               <MergeButton onClick={() => merge(k)}/>
+                                              <BundleButton onClick={() => bundleFolder(k)}/>
                                               <TrashButton onClick={() => trash(k, name)}/>
                                             </div>
                                           </li>

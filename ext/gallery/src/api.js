@@ -24,6 +24,10 @@ export async function deleteFolder(folder_id) {
   }
 }
 
+export async function bundleFolder(folder_id) {
+  window.location = server() + '/bundle/' + folder_id
+}
+
 export async function getPhotos(folder_id, page) {
   const response = await fetch(server() + '/folder/' + folder_id + '?page=' + page);
   if (response.status !== 200) {

@@ -14,6 +14,7 @@ gem 'faraday'
 gem 'faraday_middleware'
 gem 'down'
 gem 'puma'
+gem 'rubyzip'
 
 group :development do
   gem 'pry-byebug'
