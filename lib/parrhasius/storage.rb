@@ -10,11 +10,11 @@ module Parrhasius
     end
 
     def save(name, bytes)
-      File.write(name, bytes)
+      File.write(file(name), bytes)
     end
 
     def file(name)
-      [@dir, name].join('/')
+      File.join(@dir, name)
     end
   end
 end
