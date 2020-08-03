@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'open-uri'
+require 'down'
 require 'nokogiri'
 require 'securerandom'
 
@@ -11,11 +11,11 @@ module Parrhasius
         img_link = link.attributes['href']
         return unless img_link
 
-        [SecureRandom.uuid + ext(img_link.value), open('https:' + img_link.value).read]
+        [SecureRandom.uuid + ext(img_link.value), Down.download('https:' + img_link.value).read]
       end
 
       def enumerate_link(link)
-        html = Nokogiri(open(link).read)
+        html = Nokogiri(Down.download(link).read)
 
         html.search('a').select { |l| l.children.size == 1 && l.children.first.to_s.match(/.*(jpg|png)$/) }
       end

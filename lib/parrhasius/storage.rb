@@ -10,9 +10,7 @@ module Parrhasius
     end
 
     def save(name, bytes)
-      open(file(name), 'wb') do |file|
-        file << bytes
-      end
+      File.write(name, bytes)
     end
 
     def file(name)

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'open-uri'
+require 'down'
 require 'nokogiri'
 require 'fileutils'
 require 'net/http'
@@ -17,7 +17,7 @@ module Parrhasius
         img_link = link.attributes['href']
         return unless img_link
 
-        [img_link.to_s.split('/').last, open(img_link).read]
+        [img_link.to_s.split('/').last, Down.download(img_link).read]
       end
 
       def enumerate_link(base_link)

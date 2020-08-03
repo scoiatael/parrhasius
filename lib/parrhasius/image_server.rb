@@ -59,7 +59,7 @@ module Parrhasius
         Zip::OutputStream.open(t.path) do |z|
           ids.each do |id| 
             z.put_next_entry(id)
-            z.print(open(full_path(by_basename(id).path)) {|f| f.read })
+            z.print(File.read(full_path(by_basename(id).path)))
           end
         end
       end
