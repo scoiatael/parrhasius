@@ -365,6 +365,16 @@
     };
     version = "0.0.2";
   };
+  rubyzip = {
+    groups = ["default"];
+    platforms = [];
+    source = {
+      remotes = ["https://rubygems.org"];
+      sha256 = "0590m2pr9i209pp5z4mx0nb1961ishdiqb28995hw1nln1d1b5ji";
+      type = "gem";
+    };
+    version = "2.3.0";
+  };
   shotgun = {
     dependencies = ["rack"];
     groups = ["development"];

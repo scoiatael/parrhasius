@@ -55,7 +55,7 @@ module Parrhasius
     end
 
     def to_archive
-      Tempfile.new([File.basename(@dir), '.zip']).tap do |t| 
+      Tempfile.new([File.basename(@dir), '.zip'], "/tmp").tap do |t|
         Zip::OutputStream.open(t.path) do |z|
           ids.each do |id| 
             z.put_next_entry(id)
