@@ -41,7 +41,7 @@ module Parrhasius
       when /joemonster/
         Parrhasius::Downloaders::Joemonster
       else
-        raise StandardError, "unexpected source: #{source}"
+        Parrhasius::Downloaders::Generic
       end
     end
   end
