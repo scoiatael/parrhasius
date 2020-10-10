@@ -30,14 +30,14 @@ function Folder({ folderId }) {
   const items = pages.map((items, index) => <Photos key={index} photos={items.toArray()} onDelete={onDelete(index)} onLike={likePhoto} />);
 
   return (
-    <InfiniteScroll
-      pageStart={-1}
-      loadMore={loadFunc}
-      hasMore={paging.has_next}
-      loader={<div className="loader" key={0}>Loading ...</div>}
-    >
-      {items}
-    </InfiniteScroll>
+      <InfiniteScroll
+        pageStart={-1}
+        loadMore={loadFunc}
+        hasMore={paging.has_next}
+        loader={<div className="loader" key={0}>Loading ...</div>}
+      >
+        {items}
+      </InfiniteScroll>
   );
 }
 

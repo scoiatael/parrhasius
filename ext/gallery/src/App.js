@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import Folder from './components/Folder';
+import Slideshow from './components/Slideshow';
 import DownloadButton from './components/DownloadButton';
 import MergeButton from './components/MergeButton';
 import BundleButton from './components/BundleButton';
 import TrashButton from './components/TrashButton';
 import DownloadStatus from './components/DownloadStatus';
+import SlideshowButton from './components/SlideshowButton'
 import { getFolders, mergeFolders, deleteFolder, bundleFolder } from './api';
 import { List, Map } from 'immutable';
 import {
@@ -18,9 +20,12 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faList } from '@fortawesome/free-solid-svg-icons'
 
-function FolderProxy() {
+function FolderProxy({slideshow}) {
   const { folderId } = useParams();
 
+  if (slideshow) {
+    return <Slideshow folderId={folderId} key={folderId} />;
+  }
   return <Folder folderId={folderId} key={folderId} />;
 }
 
@@ -29,8 +34,11 @@ function Folders() {
   return (
     <div>
       <Switch>
+        <Route path={`${match.path}/:folderId/slideshow`}>
+          <FolderProxy slideshow={true}/>
+        </Route>
         <Route path={`${match.path}/:folderId`}>
-          <FolderProxy />
+          <FolderProxy slideshow={false}/>
         </Route>
         <Route path={match.path}>
           <h3>Please select a folder.</h3>
@@ -108,6 +116,7 @@ function App() {
               {links.slice(-6)}
             </ul>
             <ul className="right">
+              <li style={{"marginRight": "0.2em"}}><SlideshowButton /></li>
               <li><DownloadButton onClick={download}/></li>
             </ul>
           </div>

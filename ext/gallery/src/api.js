@@ -1,4 +1,5 @@
 import oboe from "oboe";
+import {List} from 'immutable';
 
 function server() {
   return process.env.NODE_ENV === 'production' ? '' : "http://localhost:9393"
@@ -35,6 +36,17 @@ export async function getPhotos(folder_id, page) {
     throw new Error(`HTTP returned: ${response.status}`)
   }
   const all = await response.json();
+  return all;
+}
+
+export async function getAllPhotos(folder_id) {
+  let next = 0;
+  let all = List.of();
+  while (next !== null) {
+    const {records, page} = await getPhotos(folder_id, next);
+    all = all.push(...records);
+    next = page.next;
+  }
   return all;
 }
 

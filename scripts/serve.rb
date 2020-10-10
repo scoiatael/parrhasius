@@ -71,11 +71,14 @@ get '/folder/:folder_id' do |folder_id|
   data = serve.by_id[folder_id].all
   page = Parrhasius::ImageServer::Page.new(size: 200, current: Integer(params[:page] || '0'), total: data.size)
   records = data[page.start...page.end]&.map do |t|
+    full = serve.by_id[folder_id].full(t.path)
     {
       src: src_url(options[:base_path], folder_id, t),
       width: t.width,
       height: t.height,
       original: options[:base_path] + "/folder/#{folder_id}/image_full/" + File.basename(t.path),
+      originalWidth: full.width,
+      originalHeight: full.height,
       title: File.basename(t.path)
     }
   end

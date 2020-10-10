@@ -14,6 +14,7 @@ module Parrhasius
       @dir = dir
       thumbnails = Dir["#{dir}/thumbnail/*"].map { |p| MiniMagick::Image.new(p) }
       @by_basename = ::Hash[thumbnails.map { |t| [File.basename(t.path), t] }]
+      @full = ::Hash[thumbnails.map { |t| [File.basename(t.path), _full(t.path)] }]
     end
 
     def first
@@ -33,6 +34,10 @@ module Parrhasius
     end
 
     def full(path)
+      @full.fetch(File.basename(path))
+    end
+
+    def _full(path)
       MiniMagick::Image.new(full_path(path))
     end
 
