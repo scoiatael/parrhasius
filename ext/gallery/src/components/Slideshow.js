@@ -47,17 +47,30 @@ function Slideshow({ folderId }) {
         {original: original1},
         {original: original2},
         {original: original3}] = sorted;
+    const animationDuration = 200;
+    let opacity = 1;
+    if (progress < animationDuration) {
+        opacity = progress / animationDuration;
+    }
+    if (progress > (timeout - animationDuration)) {
+        opacity = (timeout - progress) / animationDuration;
+    }
+    const style = {
+        width: '98%',
+        transition: 'all 0.01s ease-in-out',
+        opacity: opacity,
+    }
     const gridTemplateColumns = `3fr 2fr 1fr`
     return (
         <div>
-           <div className="progress">
-             <div className="determinate" style={{width: `${100* progress / timeout}%`, transitionDuration: '0.01s'}}></div>
-           </div>
-            <div style={{display: 'grid', gridTemplateColumns, maxHeight: '80% - 64px', width: '100%'}}>
-                <img src={original1} alt="" style={{gridColumn: 1, maxWidth: '98%'}}/>
-                <img src={original2} alt="" style={{gridColumn: 2, maxWidth: '98%'}}/>
-                <img src={original3} alt="" style={{gridColumn: 3, maxWidth: '98%'}}/>
-            </div>
+          <div className="progress">
+            <div className="determinate" style={{width: `${100* progress / timeout}%`, transitionDuration: '0.01s'}}></div>
+          </div>
+          <div style={{display: 'grid', gridTemplateColumns, maxHeight: '80% - 64px', width: '100%'}}>
+            <img src={original1} alt="" style={{gridColumn: 1, ...style}}/>
+            <img src={original2} alt="" style={{gridColumn: 2, ...style}}/>
+            <img src={original3} alt="" style={{gridColumn: 3, ...style}}/>
+          </div>
         </div>
     );
 }
