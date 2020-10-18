@@ -5,12 +5,30 @@ import {List} from 'immutable';
 const numItems = 3;
 const timeout = 5 * 1000;
 
-function next(cur, total) {
-    let nextNext = cur + 2*numItems;
-    if (nextNext < total) {
-        return cur + numItems;
+function nextOffset(cur, total) {
+    let next = cur + numItems;
+    if (next < total) {
+        return next;
     }
-    return nextNext % total;
+    return next % total;
+}
+
+function nextSlice(items, offset) {
+    console.log(offset, items.size);
+    if (offset + numItems <= items.size) {
+        return items.slice(offset, offset+numItems)
+    } else {
+        return items.slice(offset, items.size).merge(items.slice(0, offset + numItems - items.size))
+    }
+}
+
+function Preloader({items}) {
+    const children = items.map(({original}, key) => <img key={key} src={original} alt=""/>)
+    return (
+        <div style={{display: 'none'}}>
+          {children}
+        </div>
+    )
 }
 
 function Slideshow({ folderId }) {
@@ -23,7 +41,7 @@ function Slideshow({ folderId }) {
         const interval = setInterval(() => {
             setProgress(i => {
                 if (i >= timeout) {
-                    setOffset(i => next(i, items.size))
+                    setOffset(i => nextOffset(i, items.size))
                     return 0
                 }
                 return i+10
@@ -36,13 +54,14 @@ function Slideshow({ folderId }) {
             setLoading(true);
             getAllPhotos(folderId).then(records => {
                 setItems(records);
+                setOffset(Math.floor(Math.random() * items.size))
                 setLoaded(true);
             }).catch(console.error.bind(console));
         }
         return (<p>loading...</p>);
     }
 
-    const sorted = items.slice(offset, offset+numItems).sortBy(({width, height}) => -(width/height)).toArray();
+    const sorted = nextSlice(items, offset).sortBy(({width, height}) => -(width/height)).toArray();
     const [
         {original: original1},
         {original: original2},
@@ -71,6 +90,7 @@ function Slideshow({ folderId }) {
             <img src={original2} alt="" style={{gridColumn: 2, ...style}}/>
             <img src={original3} alt="" style={{gridColumn: 3, ...style}}/>
           </div>
+          <Preloader items={nextSlice(items, nextOffset(offset, items.size)).toArray()}/>
         </div>
     );
 }
