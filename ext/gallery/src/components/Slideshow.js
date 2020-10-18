@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {getAllPhotos} from '../api';
 import {List} from 'immutable';
+import Loader from './Loader';
 
 const numItems = 3;
 const timeout = 5 * 1000;
@@ -58,7 +59,7 @@ function Slideshow({ folderId }) {
                 setLoaded(true);
             }).catch(console.error.bind(console));
         }
-        return (<p>loading...</p>);
+        return (<Loader />);
     }
 
     const sorted = nextSlice(items, offset).sortBy(({width, height}) => -(width/height)).toArray();
@@ -82,9 +83,7 @@ function Slideshow({ folderId }) {
     const gridTemplateColumns = `3fr 2fr 1fr`
     return (
         <div>
-          <div className="progress">
-            <div className="determinate" style={{width: `${100* progress / timeout}%`, transitionDuration: '0.01s'}}></div>
-          </div>
+          <Loader progress={progress / timeout}/>
           <div style={{display: 'grid', gridTemplateColumns, maxHeight: '80% - 64px', width: '100%'}}>
             <img src={original1} alt="" style={{gridColumn: 1, ...style}}/>
             <img src={original2} alt="" style={{gridColumn: 2, ...style}}/>

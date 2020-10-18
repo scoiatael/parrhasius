@@ -3,6 +3,7 @@ import Photos from './Photos';
 import {getPhotos, deletePhoto, likePhoto} from '../api';
 import InfiniteScroll from 'react-infinite-scroller';
 import {List} from 'immutable';
+import Loader from './Loader';
 
 function Folder({ folderId }) {
   const [pages, setPages] = useState(List.of());
@@ -34,7 +35,7 @@ function Folder({ folderId }) {
         pageStart={-1}
         loadMore={loadFunc}
         hasMore={paging.has_next}
-        loader={<div className="loader" key={0}>Loading ...</div>}
+        loader={<div className="loader" key={0}><Loader /></div>}
       >
         {items}
       </InfiniteScroll>
