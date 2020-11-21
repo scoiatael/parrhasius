@@ -21,4 +21,5 @@ group :development do
   gem 'rake'
   gem 'rubocop'
   gem 'shotgun'
+  gem 'solargraph'
 end
