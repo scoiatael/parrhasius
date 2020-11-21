@@ -7,6 +7,8 @@ require 'securerandom'
 module Parrhasius
   module Downloaders
     class Generic
+      include Enumerable
+      
       def download(img_link)
         [SecureRandom.uuid + ext(img_link), Down.download(img_link).read]
       end

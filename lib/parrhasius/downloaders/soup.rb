@@ -13,6 +13,8 @@ module Parrhasius
     MAX_REDIRECTS = 6
 
     class Soup
+      include Enumerable
+      
       def download(link)
         img_link = link.attributes['href']
         return unless img_link

@@ -2,6 +2,7 @@
 
 require 'digest'
 require 'pathname'
+require 'concurrent'
 require_relative 'log'
 
 module Parrhasius
@@ -16,9 +17,11 @@ module Parrhasius
     end
 
     def refresh!
+      children = @parent.children.select { |p| p.directory? && valid?(p) } .map { |p| [Digest::SHA2.new(256).hexdigest(p.realpath.to_s), p.relative_path_from(@parent)] }.to_h
+      by_id = children.map { |k, p| [k, Concurrent::Promise.execute { Parrhasius::ImageServer.new(@parent.realpath.join(p)) }] }
       synchronize do
-        @children = @parent.children.select { |p| p.directory? && valid?(p) } .map { |p| [Digest::SHA2.new(256).hexdigest(p.realpath.to_s), p.relative_path_from(@parent)] }.to_h
-        @by_id = ::Hash.new { |s, folder_id| s[folder_id] = Parrhasius::ImageServer.new(_by_id(folder_id)) }
+        @children = children
+        @by_id = by_id.map { |k, v| [k, v.wait.value] } .to_h
       end
     end
 
@@ -45,10 +48,6 @@ module Parrhasius
 
     def synchronize(&block)
       @semaphore.synchronize(&block)
-    end
-
-    def _by_id(folder_id)
-      @parent.realpath.join @children.fetch(folder_id)
     end
   end
 end
