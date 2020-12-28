@@ -54,3 +54,9 @@ task :service do
   erb.filename = filename
   puts erb.result
 end
+
+
+desc 'Fix thumbnails in given dir'
+task :minify, [:dir] do |task, args|
+  ruby 'scripts/minify.rb', args[:dir]
+end

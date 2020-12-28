@@ -29,7 +29,7 @@ function Photos({photos, onDelete, onLike}) {
   }, [currentImage, closeLightbox, onLike, photos]);
 
   const viewer = viewerIsOpen ? (
-      <Modal onClose={closeLightbox}>
+    <Modal onClose={closeLightbox}>
       <Carousel
         components={{ Footer: null, NavigationPrev: null, Navigation: null, Header: Header(deleteCurrentPhoto, likeCurrentPhoto) }}
         currentIndex={currentImage}

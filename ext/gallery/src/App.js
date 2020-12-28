@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Folder from './components/Folder';
 import Slideshow from './components/Slideshow';
+import ComicStrip from './components/ComicStrip';
 import DownloadButton from './components/DownloadButton';
 import MergeButton from './components/MergeButton';
 import BundleButton from './components/BundleButton';
@@ -20,9 +21,12 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faList } from '@fortawesome/free-solid-svg-icons'
 
-function FolderProxy({slideshow}) {
+function FolderProxy({slideshow, ordered}) {
   const { folderId } = useParams();
 
+  if (ordered) {
+    return <ComicStrip folderId={folderId} key={folderId} />;
+  }
   if (slideshow) {
     return <Slideshow folderId={folderId} key={folderId} />;
   }
@@ -34,11 +38,14 @@ function Folders() {
   return (
     <div>
       <Switch>
+        <Route path={`${match.path}/:folderId/ordered`}>
+          <FolderProxy slideshow={false} ordered={true}/>
+        </Route>
         <Route path={`${match.path}/:folderId/slideshow`}>
-          <FolderProxy slideshow={true}/>
+          <FolderProxy slideshow={true} ordered={false}/>
         </Route>
         <Route path={`${match.path}/:folderId`}>
-          <FolderProxy slideshow={false}/>
+          <FolderProxy slideshow={false} ordered={false}/>
         </Route>
         <Route path={match.path}>
           <h3>Please select a folder.</h3>
