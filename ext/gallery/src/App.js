@@ -7,7 +7,8 @@ import MergeButton from './components/MergeButton';
 import BundleButton from './components/BundleButton';
 import TrashButton from './components/TrashButton';
 import DownloadStatus from './components/DownloadStatus';
-import SlideshowButton from './components/SlideshowButton'
+import SlideshowButton from './components/SlideshowButton';
+import ComicStripButton from './components/ComicStripButton';
 import { getFolders, mergeFolders, deleteFolder, bundleFolder } from './api';
 import { List, Map } from 'immutable';
 import {
@@ -124,6 +125,7 @@ function App() {
             </ul>
             <ul className="right">
               <li style={{"marginRight": "0.2em"}}><SlideshowButton /></li>
+              <li style={{"marginRight": "0.2em"}}><ComicStripButton /></li>
               <li><DownloadButton onClick={download}/></li>
             </ul>
           </div>
