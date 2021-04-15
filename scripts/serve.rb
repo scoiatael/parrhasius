@@ -237,11 +237,11 @@ post '/downloads' do
 
   stream do |out|
     out << '{ "events":['
-    storage = Parrhasius::Storage.new(['db', Time.now.to_i, 'original'].join('/'))
+    storage = Parrhasius::Storage.new([dir, Time.now.to_i, 'original'].join('/'))
     download_pb = StreamingProgressBar.new(:downloading, out)
     Parrhasius::Download.new(Parrhasius::Download.for(url), storage, download_pb).run(url)
     dedup_pb = StreamingProgressBar.new(:deduping, out)
-    Parrhasius::Dedup.new(db: 'db/index.pstore', dir: storage.dir, progress_bar: dedup_pb).run
+    Parrhasius::Dedup.new(db: "#{dir}/index.pstore", dir: storage.dir, progress_bar: dedup_pb).run
     minify_pb = StreamingProgressBar.new(:minifying, out)
     Parrhasius::Minify.new(minify_pb).run(src: storage.dir, dest: storage.dir.sub('original', 'thumbnail'))
     serve.refresh!
