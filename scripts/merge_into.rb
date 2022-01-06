@@ -4,11 +4,9 @@ require 'fileutils'
 require 'pathname'
 
 INTO = ARGV.first
-FROM = ARGV[1..-1]
+FROM = ARGV[1..]
 
-if INTO.nil? || FROM.empty?
-  raise StandardError, 'Usage: merge-into dest src1 src2..'
-end
+raise StandardError, 'Usage: merge-into dest src1 src2..' if INTO.nil? || FROM.empty?
 
 class ImgDir
   attr_reader :dir
@@ -40,13 +38,11 @@ srcs = FROM.map { |f| ImgDir.new(f) }
 
 invalid = srcs.reject(&:valid?)
 
-unless invalid.empty?
-  raise StandardError, "#{invalid.map(&:dir).join(', ')} are invalid sources"
-end
+raise StandardError, "#{invalid.map(&:dir).join(', ')} are invalid sources" unless invalid.empty?
 
 unless ImgDir.new(INTO).dir.exist?
-  FileUtils.mkdir_p(INTO + '/original')
-  FileUtils.mkdir_p(INTO + '/thumbnail')
+  FileUtils.mkdir_p("#{INTO}/original")
+  FileUtils.mkdir_p("#{INTO}/thumbnail")
 end
 
 dst = ImgDir.new(INTO)
@@ -56,7 +52,7 @@ raise StandardError, "#{dst.dir} is invalid destination" unless dst.valid?
 srcs.each do |s|
   s.children.each do |ch|
     type = ch.basename.to_s # either original or thumbnail
-    ch.children .each do |c|
+    ch.children.each do |c|
       c_dst = [dst.dir, type, c.basename].join('/')
       FileUtils.mv(c.realpath, c_dst)
     end

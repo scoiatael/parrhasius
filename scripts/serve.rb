@@ -16,7 +16,7 @@ options = {
 
 require 'logger'
 
-logger = Logger.new(STDOUT)
+logger = Logger.new($stdout)
 logger.level = Logger::DEBUG
 
 use Rack::Cache
@@ -44,14 +44,16 @@ def src_url(base_path, folder_id, img)
 end
 
 get '/all' do
-  children = serve.all.map { |k, v| [k, {name: v, avatar: src_url(options[:base_path], k, serve.by_id[k].first)}]} .to_h
+  children = serve.all.map do |k, v|
+    [k, { name: v, avatar: src_url(options[:base_path], k, serve.by_id[k].first) }]
+  end.to_h
   content_type 'application/json'
   JSON.dump(children)
 end
 
 get '/bundle/:folder_id' do |folder_id|
   headers(
-    'Content-Disposition' => 'attachment',
+    'Content-Disposition' => 'attachment'
   )
   content_type 'application/zip'
 
@@ -59,10 +61,10 @@ get '/bundle/:folder_id' do |folder_id|
   t = src.to_archive
 
   send_file t.path,
-            :type => 'application/zip',
-            :disposition => 'attachment',
-            :filename => File.basename(t.path),
-            :stream => false
+            type: 'application/zip',
+            disposition: 'attachment',
+            filename: File.basename(t.path),
+            stream: false
   t.close
   t.unlink
 end
@@ -88,10 +90,10 @@ rescue KeyError => e
   content_type 'application/json'
   status 500
   JSON.dump({
-    error: e,
-    folder_id: folder_id,
-    folder_ids: serve.all.keys
-  })
+              error: e,
+              folder_id: folder_id,
+              folder_ids: serve.all.keys
+            })
 end
 
 options '/folder/:folder_id' do
@@ -105,7 +107,7 @@ end
 delete '/folder/:folder_id' do |folder_id|
   src = serve.by_id[folder_id]
 
-  src.ids.each do |id| 
+  src.ids.each do |id|
     thumbnail = src.delete(id)
     serve.move_to_bin(thumbnail)
   end
@@ -136,7 +138,7 @@ post '/folder/:folder_id/merge' do |folder_id|
   dst.join('original').mkpath
   dst.join('thumbnail').mkpath
 
-  src.ids.each do |id| 
+  src.ids.each do |id|
     src.move(id, dst)
   end
 
@@ -225,11 +227,11 @@ class StreamingProgressBar
   private
 
   def out(status)
-    @stream << JSON.dump(stage: @stage, status: status, progress: @progress, total: @total, title: @title) + ','
+    @stream << "#{JSON.dump(stage: @stage, status: status, progress: @progress, total: @total, title: @title)},"
   end
 end
 
-post '/downloads' do 
+post '/downloads' do
   payload = JSON.parse(request.body.read)
   url = payload.fetch('url')
 
@@ -245,6 +247,6 @@ post '/downloads' do
     minify_pb = StreamingProgressBar.new(:minifying, out)
     Parrhasius::Minify.new(minify_pb).run(src: storage.dir, dest: storage.dir.sub('original', 'thumbnail'))
     serve.refresh!
-    out << JSON.dump(done: true) + ']}'
+    out << "#{JSON.dump(done: true)}]}"
   end
 end
