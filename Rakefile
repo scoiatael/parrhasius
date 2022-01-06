@@ -1,5 +1,12 @@
 # frozen_string_literal: true
 
+# TODO: Add your own tasks in files placed in lib/tasks ending in .rake,
+# for example lib/tasks/capistrano.rake, and they will automatically be available to Rake.
+
+require_relative 'config/application'
+
+Rails.application.load_tasks
+
 desc 'Start dev web server'
 task :'dev-webserver' do
   sh 'puma', '--bind=tcp://127.0.0.1:9393'

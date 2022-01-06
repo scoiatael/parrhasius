@@ -6,7 +6,7 @@ rack = Rack::Builder.new do
   use Rack::Cache
   use Rack::CommonLogger
   run Rack::Cascade.new([
-                          Parrhasius::Application,
+                          Parrhasius::API,
                           Rails.application
                         ])
 end
