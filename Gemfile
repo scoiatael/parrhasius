@@ -32,6 +32,9 @@ gem 'jbuilder'
 gem 'rails', '~> 7.0.0'
 gem 'sqlite3', '~> 1.4'
 
+# https://github.com/brandonhilkert/sucker_punch#active-job
+gem 'sucker_punch'
+
 # Use Redis adapter to run Action Cable in production
 # gem "redis", "~> 4.0"
 
