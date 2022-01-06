@@ -28,7 +28,7 @@ end
 
 task :compile do
   Dir.chdir File.expand_path('ext/parrhasius', __dir__)
-  ENV.delete("GOPATH")
+  ENV.delete('GOPATH')
   sh 'go build -o ../../lib/parrhasius.so -buildmode=c-shared main.go'
 end
 
@@ -46,17 +46,7 @@ task :merge do
   ARGV.each { |a| task(a.to_s) {} }
 end
 
-desc 'Output systemd service file'
-task :service do
-  require 'erb'
-  filename = 'parrhasius.service.erb'   # 'arg1' and 'arg2' are used in example.rhtml
-  erb = ERB.new(File.read(filename))
-  erb.filename = filename
-  puts erb.result
-end
-
-
 desc 'Fix thumbnails in given dir'
-task :minify, [:dir] do |task, args|
+task :minify, [:dir] do |_task, args|
   ruby 'scripts/minify.rb', args[:dir]
 end
