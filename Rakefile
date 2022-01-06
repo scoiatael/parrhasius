@@ -2,7 +2,7 @@
 
 desc 'Start dev web server'
 task :'dev-webserver' do
-  ruby 'scripts/serve.rb', '-p 9393'
+  sh 'puma', '--bind=tcp://127.0.0.1:9393'
 end
 
 desc 'Start dev frontend reloader'
@@ -14,7 +14,7 @@ end
 desc 'Start pre-compiled server'
 task :run do
   ENV['APP_ENV'] = 'production'
-  ruby 'scripts/serve.rb'
+  sh 'puma', '--bind=tcp://0.0.0.0:4567', '--workers=4'
 end
 
 # Can't multitask because of chdirs inside
