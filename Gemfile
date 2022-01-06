@@ -2,19 +2,26 @@
 
 source 'https://rubygems.org'
 
+# core
 gem 'concurrent-ruby'
+gem 'down'
+gem 'faraday'
+gem 'faraday-cookie_jar'
+gem 'faraday_middleware'
 gem 'ffi'
 gem 'mini_magick'
 gem 'nokogiri'
-gem 'rack-cache'
 gem 'ruby-progressbar'
-gem 'sinatra'
-gem 'faraday-cookie_jar'
-gem 'faraday'
-gem 'faraday_middleware'
-gem 'down'
-gem 'puma'
 gem 'rubyzip'
+gem 'sinatra'
+
+# webserver
+gem 'puma'
+gem 'rack-cache'
+
+# rails
+gem 'bootsnap', require: false
+gem 'rails'
 
 group :development do
   gem 'pry-byebug'

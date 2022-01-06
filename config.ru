@@ -1,13 +1,13 @@
 require 'rack/cache'
+require_relative 'config/environment'
 require_relative 'lib/parrhasius'
 
 rack = Rack::Builder.new do
   use Rack::Cache
   use Rack::CommonLogger
-  # use Rails::Rack::Static
   run Rack::Cascade.new([
-                          Parrhasius::Application
-                          # ActionController::Dispatcher.new
+                          Parrhasius::Application,
+                          Rails.application
                         ])
 end
 

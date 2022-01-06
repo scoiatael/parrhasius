@@ -16,7 +16,7 @@ logger.level = Logger::DEBUG
 logger.info "Serving #{dir}"
 
 module Parrhasius
-  class Application < Sinatra::Application
+  class API < Sinatra::Application
     if ENV['APP_ENV'] == 'production'
       set :public_folder, 'ext/gallery/build'
       set :base_path, ''
