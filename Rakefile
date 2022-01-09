@@ -9,7 +9,7 @@ Rails.application.load_tasks
 
 desc 'Start dev web server'
 task :'dev-webserver' do
-  sh 'puma', '--bind=tcp://127.0.0.1:9393'
+  sh 'guard', '-i'
 end
 
 desc 'Start dev frontend reloader'

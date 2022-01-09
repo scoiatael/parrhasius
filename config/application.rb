@@ -1,6 +1,7 @@
 require_relative 'boot'
 
 require 'rails/all'
+require 'rack/cors'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -24,5 +25,16 @@ module Parrhasius
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
+
+    config.logger = Logger.new(STDOUT)
+
+    if ENV['APP_ENV'] != 'production'
+      config.middleware.insert_before 0, Rack::Cors do
+        allow do
+          origins 'http://localhost:3000'
+          resource '*', headers: :any, methods: %i[get post patch put]
+        end
+      end
+    end
   end
 end

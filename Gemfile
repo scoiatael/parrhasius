@@ -20,7 +20,10 @@ gem 'puma'
 gem 'rack-cache'
 
 group :development do
+  gem 'guard'
+  gem 'guard-rack'
   gem 'pry-byebug'
+  gem 'rack-cors'
   gem 'rake'
   gem 'rubocop'
   gem 'shotgun'

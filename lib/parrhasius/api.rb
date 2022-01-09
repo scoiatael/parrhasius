@@ -5,15 +5,15 @@ require 'sinatra'
 require_relative 'folder_server'
 require_relative 'image_server'
 
-dir = File.expand_path(ENV['SERVE'] || './db')
-SERVE = Parrhasius::FolderServer.new(dir)
+DIR = File.expand_path(ENV['SERVE'] || './db')
+SERVE = Parrhasius::FolderServer.new(DIR)
 
 require 'logger'
 
 logger = Logger.new($stdout)
 logger.level = Logger::DEBUG
 
-logger.info "Serving #{dir}"
+logger.info "Serving #{DIR}"
 
 module Parrhasius
   class API < Sinatra::Application
@@ -191,26 +191,6 @@ module Parrhasius
       )
       status 204
       []
-    end
-
-    post '/downloads' do
-      payload = JSON.parse(request.body.read)
-      url = payload.fetch('url')
-
-      logger.info "Received download request #{payload}"
-
-      stream do |out|
-        out << '{ "events":['
-        storage = Parrhasius::Storage.new([dir, Time.now.to_i, 'original'].join('/'))
-        download_pb = StreamingProgressBar.new(:downloading, out)
-        Parrhasius::Download.new(Parrhasius::Download.for(url), storage, download_pb).run(url)
-        dedup_pb = StreamingProgressBar.new(:deduping, out)
-        Parrhasius::Dedup.new(db: "#{dir}/index.pstore", dir: storage.dir, progress_bar: dedup_pb).run
-        minify_pb = StreamingProgressBar.new(:minifying, out)
-        Parrhasius::Minify.new(minify_pb).run(src: storage.dir, dest: storage.dir.sub('original', 'thumbnail'))
-        SERVE.refresh!
-        out << "#{JSON.dump(done: true)}]}"
-      end
     end
   end
 end
