@@ -8,7 +8,7 @@ module Parrhasius
   module Downloaders
     class FourChan
       include Enumerable
-      
+
       def download(link)
         img_link = link.attributes['href']
         return unless img_link

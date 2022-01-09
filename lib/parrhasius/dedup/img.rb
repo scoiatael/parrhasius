@@ -11,7 +11,7 @@ module Parrhasius
 
       def hash!
         @hash = do_hash(path)
-      rescue
+      rescue StandardError
         @hash = nil
       end
 

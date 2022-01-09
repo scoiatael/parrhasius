@@ -50,14 +50,14 @@ module Parrhasius
 
     def move(basename, dst)
       thumb_path = @by_basename.fetch(basename).path
-      FileUtils.mv(thumb_path, dst.join("thumbnail").join(basename))
-      FileUtils.mv(full_path(thumb_path), dst.join("original").join(basename))
+      FileUtils.mv(thumb_path, dst.join('thumbnail').join(basename))
+      FileUtils.mv(full_path(thumb_path), dst.join('original').join(basename))
     end
 
     def to_archive
-      Tempfile.new([File.basename(@dir), '.zip'], "/tmp").tap do |t|
+      Tempfile.new([File.basename(@dir), '.zip'], '/tmp').tap do |t|
         Zip::OutputStream.open(t.path) do |z|
-          ids.each do |id| 
+          ids.each do |id|
             z.put_next_entry(id)
             z.print(File.read(full_path(by_basename(id).path)))
           end

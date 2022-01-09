@@ -14,7 +14,7 @@ module Parrhasius
 
     class Soup
       include Enumerable
-      
+
       def download(link)
         img_link = link.attributes['href']
         return unless img_link
@@ -26,7 +26,8 @@ module Parrhasius
         links = []
         link = base_link
         iterations = 0
-        pb = ProgressBar.create(title: 'Collecting links', total: MAX_ITERATIONS, format: "%t (%c/%C): |\e[0;37m%B\e[0m| %E")
+        pb = ProgressBar.create(title: 'Collecting links', total: MAX_ITERATIONS,
+                                format: "%t (%c/%C): |\e[0;37m%B\e[0m| %E")
         MAX_ITERATIONS.times do
           break unless links.size < 200
 
@@ -80,7 +81,7 @@ module Parrhasius
           url = r['Location']
           cookies = r['set-cookie'].sub(',', ';') if r['set-cookie'] # For weird reasons Faraday joins headers with ,
         end
-        raise StandardError, "Too many redirects"
+        raise StandardError, 'Too many redirects'
       end
     end
   end

@@ -8,7 +8,7 @@ module Parrhasius
   module Downloaders
     class Joemonster
       include Enumerable
-      
+
       def download(img)
         src = img['src']
         [SecureRandom.uuid + ext(src), Down.download(src).read]
