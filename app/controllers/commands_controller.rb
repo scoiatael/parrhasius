@@ -5,25 +5,10 @@ class CommandsController < ApplicationController
 
   def download
     payload = JSON.parse(request.body.read)
+    path = File.join([DIR, Time.now.to_i.to_s, 'original'])
 
-    do_download payload.fetch('url'),
-                storage
+    DownloadPageJob.perform_later(payload.fetch('url'), path)
 
-    render json: { done: true }
-  end
-
-  private
-
-  def storage
-    Parrhasius::Storage.new([DIR, Time.now.to_i, 'original'].join('/'))
-  end
-
-  def do_download(url, storage)
-    Parrhasius::Download.new(Parrhasius::Download.for(url), storage, ProgressBar).run(url)
-    Parrhasius::Dedup.new(db: "#{DIR}/index.pstore",
-                          dir: storage.dir,
-                          progress_bar: ProgressBar).run
-    Parrhasius::Minify.new(ProgressBar).run(src: storage.dir)
-    SERVE.refresh!
+    render json: { queued: true }
   end
 end
