@@ -7,8 +7,8 @@ class CommandsController < ApplicationController
     payload = JSON.parse(request.body.read)
     path = File.join([DIR, Time.now.to_i.to_s, 'original'])
 
-    DownloadPageJob.perform_later(payload.fetch('url'), path)
+    job = DownloadPageJob.perform_later(payload.fetch('url'), path)
 
-    render json: { queued: true }
+    render json: { queued: true, job_id: job.job_id }
   end
 end
