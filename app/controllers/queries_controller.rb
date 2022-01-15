@@ -6,7 +6,7 @@ class QueriesController < ApplicationController
   def job_status
     job = ActiveJob::Status.get(params.fetch('job_id'))
 
-    return render json: status(job) if job.completed?
+    return render json: status(job) if job.completed? || job.failed?
 
     expires_now
     response.headers['Last-Modified'] = Time.now.httpdate
@@ -15,13 +15,12 @@ class QueriesController < ApplicationController
       stream.write('{"events":[')
       loop do
         stream.write(JSON.dump(status(job)))
-        break if job.completed?
+        break if job.completed? || job.failed?
 
         sleep 0.1
       end
       stream.write(']}')
     end
-    puts('Done.')
   end
 
   private

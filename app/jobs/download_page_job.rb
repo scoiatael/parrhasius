@@ -14,14 +14,12 @@ class DownloadPageJob < ApplicationJob
   end
 
   def do_download(url, storage)
-    status.update(stage: 'download')
-    Parrhasius::Download.new(Parrhasius::Download.for(url), storage, ProgressBar).run(url)
-    status.update(stage: 'dedup')
+    pb = Parrhasius::ActiveJobPB.new(self)
+    Parrhasius::Download.new(Parrhasius::Download.for(url), storage, pb).run(url)
     Parrhasius::Dedup.new(db: "#{DIR}/index.pstore",
                           dir: storage.dir,
-                          progress_bar: ProgressBar).run
-    status.update(stage: 'minify')
-    Parrhasius::Minify.new(ProgressBar).run(src: storage.dir)
+                          progress_bar: pb).run
+    Parrhasius::Minify.new(pb).run(src: storage.dir)
     SERVE.refresh!
   end
 end
