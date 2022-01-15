@@ -4,4 +4,5 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "articles#index"
   post '/api/download', to: 'commands#download'
+  get '/api/job/:job_id', to: 'queries#job_status', as: 'job_status'
 end

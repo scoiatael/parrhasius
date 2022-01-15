@@ -1,0 +1,33 @@
+#+TITLE: Api
+* Parrhasius API
+** NOTE: run against dev webserver
+#+begin_src bash
+rake dev-webserver
+#+end_src
+** POST /api/download: Send scrape job
+#+begin_src http :pretty :select .job_id
+POST http://localhost:9393/api/download
+Content-Type: application/json
+Accept: application/json,text/*;q=0.99
+
+{"url":"https://boards.4chan.org/wg/thread/7859810"}
+#+end_src
+
+#+RESULTS:
+: 3eb352df-8e90-4ea0-b6e9-585b25a94dba
+** GET /api/job/job_id: Get job status
+#+begin_src http :pretty
+GET http://localhost:9393/api/job/3eb352df-8e90-4ea0-b6e9-585b25a94dba
+Content-Type: application/json
+Accept: application/json,text/*;q=0.99
+
+{"url":"https://boards.4chan.org/wg/thread/7859810"}
+#+end_src
+
+#+RESULTS:
+: {
+:   "status": {
+:     "status": "completed",
+:     "stage": "minify"
+:   }
+: }
