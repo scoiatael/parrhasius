@@ -1,4 +1,4 @@
-/db/
+/db/*
 /lib/parrhasius.h
 /lib/parrhasius.so
 /.bundle/
@@ -31,3 +31,7 @@
 
 # Ignore master key for decrypting credentials and more.
 /config/master.key
+
+# A conflict since rails and sinatra both use db
+!/db/migrate/
+!/db/seeds.rb
