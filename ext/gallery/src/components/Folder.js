@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react";
 import Photos from "./Photos";
-import { getPhotos, deletePhoto, likePhoto } from "../api";
+import { getPhotos, deletePhoto } from "../api";
 import InfiniteScroll from "react-infinite-scroller";
 import { List } from "immutable";
 import Loader from "./Loader";
@@ -23,7 +23,7 @@ function Folder({ folderId }) {
       const currentPhoto = pages.get(currentPage).get(photoIndex);
       const toBeDeleted = window.confirm(`Delete photo ${currentPhoto.title}?`);
       if (toBeDeleted) {
-        deletePhoto(currentPhoto)
+        deletePhoto(currentPhoto.id)
           .then(() => {
             setPages(
               pages.set(currentPage, pages.get(currentPage).delete(photoIndex))
@@ -36,12 +36,7 @@ function Folder({ folderId }) {
   );
 
   const items = pages.map((items, index) => (
-    <Photos
-      key={index}
-      photos={items.toArray()}
-      onDelete={onDelete(index)}
-      onLike={likePhoto}
-    />
+    <Photos key={index} photos={items.toArray()} onDelete={onDelete(index)} />
   ));
 
   return (

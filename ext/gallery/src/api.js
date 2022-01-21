@@ -12,9 +12,9 @@ export async function getFolders() {
 }
 
 export async function mergeFolders(folder_id, target) {
-  const response = await fetch(server() + "/folder/" + folder_id + "/merge", {
+  const response = await fetch(server() + "/api/merge_folders", {
     method: "POST",
-    body: JSON.stringify({ target: target }),
+    body: JSON.stringify({ src: folder_id, dst: target }),
   });
   if (response.status !== 200) {
     throw new Error(`HTTP returned: ${response.status}`);
@@ -22,8 +22,9 @@ export async function mergeFolders(folder_id, target) {
 }
 
 export async function deleteFolder(folder_id) {
-  const response = await fetch(server() + "/folder/" + folder_id, {
-    method: "DELETE",
+  const response = await fetch(server() + "/api/delete_folder", {
+    method: "POST",
+    body: JSON.stringify({ folder_id }),
   });
   if (response.status !== 200) {
     throw new Error(`HTTP returned: ${response.status}`);
@@ -31,7 +32,7 @@ export async function deleteFolder(folder_id) {
 }
 
 export async function bundleFolder(folder_id) {
-  window.location = server() + "/bundle/" + folder_id;
+  window.location = server() + "/api/folder/" + folder_id + "/bundle";
 }
 
 export async function getPhotos(folder_id, page) {
@@ -57,14 +58,14 @@ export async function getAllPhotos(folder_id) {
   return all;
 }
 
-export async function deletePhoto(img) {
-  const response = await fetch(img.src, { method: "DELETE" });
-  return response;
-}
-
-export async function likePhoto(img) {
-  const response = await fetch(img.src, { method: "PUT" });
-  return response;
+export async function deletePhoto(image_id) {
+  const response = await fetch(server() + "/api/delete_image", {
+    method: "POST",
+    body: JSON.stringify({ image_id }),
+  });
+  if (response.status !== 200) {
+    throw new Error(`HTTP returned: ${response.status}`);
+  }
 }
 
 export async function download(url) {

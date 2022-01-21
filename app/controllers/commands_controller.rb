@@ -14,4 +14,29 @@ class CommandsController < ApplicationController
       format.json { render json: { queued: true, job_id: job.job_id } }
     end
   end
+
+  def delete_folder
+    folder = Folder.find(JSON.parse(request.body.read).fetch('folder_id'))
+    folder.images.delete_all
+    folder.delete
+    render json: { status: :ok }
+  end
+
+  def merge_folders
+    payload = JSON.parse(request.body.read)
+    src = Folder.find(payload.fetch('src'))
+    dst = Folder.find_or_create_by(name: payload.fetch('dst'))
+    src.images.each do |image|
+      image.folder = dst
+      image.save!
+    end
+    src.delete
+    render json: { status: :ok }
+  end
+
+  def delete_image
+    image = Image.find(JSON.parse(request.body.read).fetch('image_id'))
+    image.delete
+    render json: { status: :ok }
+  end
 end

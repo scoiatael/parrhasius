@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'zip'
+
 class QueriesController < ApplicationController
   include ActionController::Live
 
@@ -50,6 +52,21 @@ class QueriesController < ApplicationController
     send_file image.path.sub('original', 'thumbnail'), # TODO: Create model for thumbnail
               filename: File.basename(image.path),
               disposition: 'inline'
+  end
+
+  def folder_bundle
+    folder = Folder.find(params.fetch('folder_id'))
+
+    tmp = Tempfile.new([folder.name, '.zip'], '/tmp')
+    Zip::OutputStream.open(tmp.path) do |z|
+      folder.images.each do |image|
+        z.put_next_entry(File.basename(image.path))
+        z.print(File.read(image.path))
+      end
+    end
+    tmp.close
+
+    send_file tmp.path
   end
 
   private
