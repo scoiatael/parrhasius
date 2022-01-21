@@ -1,8 +1,15 @@
 # frozen_string_literal: true
 
+# TODO: Add your own tasks in files placed in lib/tasks ending in .rake,
+# for example lib/tasks/capistrano.rake, and they will automatically be available to Rake.
+
+require_relative 'config/application'
+
+Rails.application.load_tasks
+
 desc 'Start dev web server'
 task :'dev-webserver' do
-  ruby 'scripts/serve.rb', '-p 9393'
+  sh 'guard', '-i'
 end
 
 desc 'Start dev frontend reloader'
@@ -14,7 +21,7 @@ end
 desc 'Start pre-compiled server'
 task :run do
   ENV['APP_ENV'] = 'production'
-  ruby 'scripts/serve.rb'
+  sh 'puma', '--bind=tcp://0.0.0.0:4567', '--workers=4'
 end
 
 # Can't multitask because of chdirs inside

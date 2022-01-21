@@ -8,7 +8,7 @@ module Parrhasius
   module Downloaders
     class Generic
       include Enumerable
-      
+
       def download(img_link)
         [SecureRandom.uuid + ext(img_link), Down.download(img_link).read]
       end
@@ -16,7 +16,7 @@ module Parrhasius
       def enumerate_link(link)
         html = Nokogiri(Down.download(link).read)
 
-        html.search('a img').map(&:parent).map { |x| link(x)} .reject(&:nil?)
+        html.search('a img').map(&:parent).map { |x| link(x) }.reject(&:nil?)
       end
 
       def initialize(main_page)
@@ -41,8 +41,10 @@ module Parrhasius
       def link(a)
         img_link = a.attributes['href']
         return unless img_link
+
         v = img_link.value
         return v if v.match(/.*(jpg|png)$/)
+
         nil
       end
     end

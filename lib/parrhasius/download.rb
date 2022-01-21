@@ -24,11 +24,10 @@ module Parrhasius
 
       total = downloads.map(&:total).sum
       Parrhasius::WithThreadPool.new(
-        storage: @storage,
-        pb: @progress_bar.create(title: 'Download', total: total, format: "%t (%c/%C): |\e[0;34m%B\e[0m| %E"),
+        pb: @progress_bar.create(title: 'Download', total: total, format: "%t (%c/%C): |\e[0;34m%B\e[0m| %E")
       ).run(downloads, &method(:download_links))
     end
-  
+
     def self.for(source)
       case source
       when /4chan/
@@ -42,18 +41,24 @@ module Parrhasius
       end
     end
 
-    def download_links(pool, downloads, pb:, storage:)
-      promises = downloads.flat_map do |download| 
+    def download_links(pool, downloads, pb:)
+      promises = downloads.flat_map do |download|
         download.map do |link|
           Concurrent::Promise.execute(executor: pool) do
             filename, data = download.download(link)
-            storage.borrow { |s| s.save(filename, data) }
+            path = File.join(@storage, filename)
+            File.open(path, 'wb') do |f|
+              f.write(data)
+            end
             pb.borrow(&:increment)
+            MiniMagick::Image.new(path)
           end
         end
       end
-      Concurrent::Promise.zip(*promises).wait!
+      ps = Concurrent::Promise.zip(*promises)
+      ps.wait!
       pb.borrow(&:finish)
+      ps.value
     end
   end
 end

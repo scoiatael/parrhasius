@@ -9,7 +9,9 @@ module Parrhasius
       @progress_bar = progress_bar
     end
 
-    def run(src:, dest:)
+    def run(src:, dest: nil)
+      dest ||= src.sub('original', 'thumbnail')
+
       FileUtils.mkdir_p(dest)
 
       everything = discover(File.expand_path(src))
