@@ -23,7 +23,46 @@ class QueriesController < ApplicationController
     end
   end
 
+  def folders
+    fs = Folder.all.map { |f| [f.id, { name: f.name, avatar: image_thumbnail_url(f.images.first&.id) }] }.to_h
+
+    render json: { folders: fs }
+  end
+
+  def folder_images
+    folder = Folder.find(params.fetch('folder_id'))
+    # TODO: https://github.com/kaminari/kaminari
+    render json: { records: folder.images.map(&method(:serialize_image)) }
+  end
+
+  def image_src
+    image = Image.find(params.fetch('image_id'))
+
+    send_file image.path,
+              disposition: 'inline',
+              filename: File.basename(image.path)
+  end
+
+  def image_thumbnail
+    image = Image.find(params.fetch('image_id'))
+
+    send_file image.path.sub('original', 'thumbnail'), # TODO: Create model for thumbnail
+              filename: File.basename(image.path),
+              disposition: 'inline'
+  end
+
   private
+
+  def serialize_image(i)
+    {
+      id: i.id,
+      title: File.basename(i.path),
+      width: i.width,
+      height: i.height,
+      src: image_thumbnail_url(i.id),
+      original: image_src_url(i.id)
+    }
+  end
 
   def status(job)
     { status: job.to_h }

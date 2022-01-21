@@ -7,6 +7,8 @@ require 'rack/cors'
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
+require_relative '../lib/parrhasius'
+
 module Parrhasius
   class Application < Rails::Application
     config.active_job.queue_adapter = :sucker_punch
@@ -37,4 +39,6 @@ module Parrhasius
       end
     end
   end
+
+  DIR = File.expand_path(ENV['SERVE'] || './db')
 end

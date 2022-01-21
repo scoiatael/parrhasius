@@ -34,18 +34,6 @@ module Parrhasius
       end
     end
 
-    def src_url(base_path, folder_id, img)
-      base_path + "/folder/#{folder_id}/image/" + File.basename(img.path) unless img.nil?
-    end
-
-    get '/all' do
-      children = SERVE.all.map do |k, v|
-        [k, { name: v, avatar: src_url(settings.base_path, k, SERVE.by_id[k].first) }]
-      end.to_h
-      content_type 'application/json'
-      JSON.dump(children)
-    end
-
     get '/bundle/:folder_id' do |folder_id|
       headers(
         'Content-Disposition' => 'attachment'
@@ -62,33 +50,6 @@ module Parrhasius
                 stream: false
       t.close
       t.unlink
-    end
-
-    get '/folder/:folder_id' do |folder_id|
-      data = SERVE.by_id[folder_id].all
-      page = Parrhasius::ImageServer::Page.new(size: 200, current: Integer(params[:page] || '0'), total: data.size)
-      records = data[page.start...page.end]&.map do |t|
-        {
-          src: src_url(settings.base_path, folder_id, t),
-          width: t.width,
-          height: t.height,
-          original: settings.base_path + "/folder/#{folder_id}/image_full/" + File.basename(t.path),
-          title: File.basename(t.path)
-        }
-      end
-      content_type 'application/json'
-      JSON.dump(
-        records: records || [],
-        page: page.to_h
-      )
-    rescue KeyError => e
-      content_type 'application/json'
-      status 500
-      JSON.dump({
-                  error: e,
-                  folder_id: folder_id,
-                  folder_ids: SERVE.all.keys
-                })
     end
 
     options '/folder/:folder_id' do
@@ -143,26 +104,6 @@ module Parrhasius
       'OK'
     end
 
-    get '/folder/:folder_id/image_full/:id' do |folder_id, id|
-      cache_control :public
-      etag [folder_id, id].join('-')
-
-      thumbnail = SERVE.by_id[folder_id].by_basename(id)
-      img = SERVE.by_id[folder_id].full(thumbnail.path)
-
-      content_type img.mime_type
-      send_file img.path
-    end
-
-    get '/folder/:folder_id/image/:id' do |folder_id, id|
-      cache_control :public
-      etag [folder_id, id].join('-')
-
-      img = SERVE.by_id[folder_id].by_basename(id)
-      content_type img.mime_type
-      send_file img.path
-    end
-
     options '/folder/:folder_id/image/:id' do
       headers(
         'Access-Control-Allow-Methods' => 'OPTIONS, GET, DELETE, PUT'
@@ -182,15 +123,6 @@ module Parrhasius
       SERVE.by_id[folder_id].set(id)
 
       'OK'
-    end
-
-    options '/downloads' do
-      headers(
-        'Access-Control-Allow-Methods' => 'OPTIONS, GET, POST',
-        'Access-Control-Allow-Headers' => 'Content-Type, Content-Length'
-      )
-      status 204
-      []
     end
   end
 end

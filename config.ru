@@ -1,5 +1,4 @@
 require_relative 'config/environment'
-require_relative 'lib/parrhasius'
 
 rack = Rack::Builder.new do
   use Rack::CommonLogger
