@@ -6,7 +6,7 @@ class QueriesController < ApplicationController
   def job_status
     job = ActiveJob::Status.get(params.fetch('job_id'))
 
-    return render json: status(job) if job.completed? || job.failed?
+    return render json: { events: [status(job)] } if job.completed? || job.failed?
 
     expires_now
     response.headers['Last-Modified'] = Time.now.httpdate

@@ -1,65 +1,69 @@
-import React, { useState } from "react";
-import { Redirect } from "react-router-dom";
-import { Map } from 'immutable';
-import { download } from '../api';
+import React, { useState, useEffect } from "react";
+import { useHistory, useParams } from "react-router-dom";
+import { Map } from "immutable";
+import { downloadStatus } from "../api";
 
-function ProgressBar({stage, width}) {
-    const style = {
-        width: width + "%"
-    };
-    return (<div>
-         <div className="col s4">
-           {stage}
-         </div>
-         <div className="col s8">
-           <div className="progress">
-             <div className="determinate" style={style}></div>
-           </div>
-         </div>
-       </div>
-      );
+function ProgressBar({ stage, width }) {
+  const style = {
+    width: width + "%",
+  };
+  return (
+    <div>
+      <div className="col s4">{stage}</div>
+      <div className="col s8">
+        <div className="progress">
+          <div className="determinate" style={style}></div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
-function DownloadStatus({url, onDone}) {
-    const [connection, setConnection] = useState(null);
-    const [status, setStatus] = useState(Map());
-    const [done, setDone] = useState(false);
+function DownloadStatus({ onDone }) {
+  const { jobId } = useParams();
+  const history = useHistory();
+  const [status, setStatus] = useState(Map());
 
-    if (!url) {
-        return (<Redirect to="/"/>)
-    }
+  useEffect(() => {
+    let mounted = true;
+    downloadStatus(jobId)
+      .on("node", "*.status.status", (status) => {
+        console.log({ status });
+        if (status === "completed" || status === "failed") {
+          history.push("/");
+          onDone();
+        }
+      })
+      .on("node", "events.{status}", (node) => {
+        const {
+          status: { step, progress, total },
+        } = node;
+        if (mounted) {
+          setStatus((st) => st.set(step, Math.floor((100 * progress) / total)));
+        }
+      })
+      .fail((err) => console.error("E", err));
+    return () => {
+      mounted = false;
+    };
+  });
 
-    if (done) {
-        return (<Redirect to="/"/>)
-    }
+  const statusPs = status
+    .toArray()
+    .map(([s, i]) => <ProgressBar key={s} width={i} stage={s} />);
 
-    if(!connection) {
-        setConnection(true);
-        download(
-            url
-        ).on('node', 'events.{stage}', node => {
-            const {stage, progress, total} = node;
-            setStatus(st => st.set(stage, Math.floor(100 * progress / total)));
-        }).on('node', 'events.{done}', node => {
-            onDone();
-            setDone(true);
-        }).fail(err => console.error("E", err));
-    }
-
-    const status_ps = status.toArray().map(([s, i]) => (
-        <ProgressBar key={s} width={i} stage={s}/>
-    ));
-
-    return (
-        <div className="container">
-          <div className="row">
-            <div className="col s12">
-              <p><a href={url}>{url}</a></p>
-            </div>
-            {status_ps}
-          </div>
+  return (
+    <div className="container">
+      <div className="row">
+        <div className="col s12">
+          <p>
+            Job: <code>{jobId}</code>
+          </p>
         </div>
-    );
+        {statusPs}
+      </div>
+    </div>
+  );
 }
 
 export default DownloadStatus;

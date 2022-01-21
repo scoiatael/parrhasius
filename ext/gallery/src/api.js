@@ -6,7 +6,7 @@ function server() {
 }
 
 export async function getFolders() {
-  const response = await fetch(server() + "/all");
+  const response = await fetch(server() + "/api/folders");
   const all = await response.json();
   return all;
 }
@@ -36,7 +36,7 @@ export async function bundleFolder(folder_id) {
 
 export async function getPhotos(folder_id, page) {
   const response = await fetch(
-    server() + "/folder/" + folder_id + "?page=" + page
+    server() + "/api/folder/" + folder_id + "/images?page=" + page
   );
   if (response.status !== 200) {
     console.error(response);
@@ -67,16 +67,28 @@ export async function likePhoto(img) {
   return response;
 }
 
-export function download(url) {
-  const data = {
+export async function download(url) {
+  const body = JSON.stringify({
     url: url,
-  };
-  return oboe({
-    url: server() + "/api/download",
+  });
+  const headers = [
+    ["Content-Type", "application/json"],
+    ["Accept", "application/json,text/*;q=0.1"],
+  ];
+  const response = await fetch(server() + "/api/download", {
     method: "POST",
+    body,
+    headers,
+  });
+  return response;
+}
+
+export function downloadStatus(jobId) {
+  return oboe({
+    url: server() + `/api/job/${jobId}`,
+    method: "GET",
     headers: {
       "Content-Type": "application/json",
     },
-    body: data,
   });
 }
