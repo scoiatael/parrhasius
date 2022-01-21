@@ -31,8 +31,9 @@ class QueriesController < ApplicationController
 
   def folder_images
     folder = Folder.find(params.fetch('folder_id'))
-    # TODO: https://github.com/kaminari/kaminari
-    render json: { records: folder.images.map(&method(:serialize_image)) }
+    page = params.fetch('page', '1').to_i
+    images = folder.images.order(:created_at).page(page)
+    render json: { records: images.map(&method(:serialize_image)), has_next: !images.empty? && !images.last_page? }
   end
 
   def image_src

@@ -10,11 +10,10 @@ function Folder({ folderId }) {
   const [paging, setPaging] = useState({ has_next: true });
 
   const loadFunc = (index) => {
-    console.log("Loading", { index });
     getPhotos(folderId, index)
-      .then(({ records }) => {
+      .then(({ records, has_next }) => {
         setPages((p) => p.push(List.of(...records)));
-        setPaging({ has_next: false });
+        setPaging({ has_next });
       })
       .catch(console.error.bind(console));
   };
@@ -47,7 +46,6 @@ function Folder({ folderId }) {
 
   return (
     <InfiniteScroll
-      pageStart={-1}
       loadMore={loadFunc}
       hasMore={paging.has_next}
       loader={

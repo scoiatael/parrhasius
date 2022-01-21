@@ -38,6 +38,9 @@ gem 'sqlite3', '~> 1.4'
 # https://github.com/brandonhilkert/sucker_punch#active-job
 gem 'sucker_punch'
 
+# pagination; https://github.com/kaminari/kaminari
+gem 'kaminari'
+
 # Use Redis adapter to run Action Cable in production
 # gem "redis", "~> 4.0"
 

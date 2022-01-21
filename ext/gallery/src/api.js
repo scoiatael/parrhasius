@@ -36,7 +36,7 @@ export async function bundleFolder(folder_id) {
 
 export async function getPhotos(folder_id, page) {
   const response = await fetch(
-    server() + "/api/folder/" + folder_id + "/images?page=" + page
+    server() + "/api/folder/" + folder_id + "/images/" + page
   );
   if (response.status !== 200) {
     console.error(response);
