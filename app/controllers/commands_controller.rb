@@ -17,6 +17,7 @@ class CommandsController < ApplicationController
 
   def delete_folder
     folder = Folder.find(JSON.parse(request.body.read).fetch('folder_id'))
+    folder.images.each { |i| i.thumbnail.delete unless i.thumbnail.nil? }
     folder.images.delete_all
     folder.delete
     render json: { status: :ok }

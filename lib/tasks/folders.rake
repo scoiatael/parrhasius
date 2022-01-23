@@ -6,6 +6,10 @@ namespace :folders do
     puts("Found #{imgs.size} images")
     exit 1 unless imgs.size
     folder = Folder.create!(name: File.basename(path))
-    folder.images.create(imgs.map { |i| Image.params_from_minimagick(MiniMagick::Image.new(i)) })
+    images = folder.images.create!(imgs.map { |i| Image.params_from_minimagick(MiniMagick::Image.new(i)) })
+    images.each do |img|
+      maybe_path = [img.path.sub('original', 'thumbnail'), img.thumbnail_path].select { |x| File.exist?(x) }.first
+      Thumbnail.create!(image: img, path: maybe_path) unless maybe_path.nil?
+    end
   end
 end

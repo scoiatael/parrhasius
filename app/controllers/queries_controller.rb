@@ -49,7 +49,7 @@ class QueriesController < ApplicationController
   def image_thumbnail
     image = Image.find(params.fetch('image_id'))
 
-    send_file image.path.sub('original', 'thumbnail'), # TODO: Create model for thumbnail
+    send_file image.thumbnail.path,
               filename: File.basename(image.path),
               disposition: 'inline'
   end
