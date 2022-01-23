@@ -22,7 +22,7 @@ class DownloadPageJob < ApplicationJob
            Parrhasius::ActiveJobPB.new(self)
          end
     images = Parrhasius::Download.new(Parrhasius::Download.for(url), path, pb).run(url)
-    folder.images.create(images.map { |image| { path: image.path, width: image.width, height: image.height } })
+    folder.images.create(images.map { |image| Image.params_from_minimagick(image) })
     Parrhasius::Dedup.new(db: "#{Parrhasius::DIR}/index.pstore",
                           dir: path,
                           progress_bar: pb).run
