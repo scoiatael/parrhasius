@@ -38,22 +38,3 @@ task :compile do
   ENV.delete('GOPATH')
   sh 'go build -o ../../lib/parrhasius.so -buildmode=c-shared main.go'
 end
-
-desc 'Download images from given URLs'
-task :download do
-  ARGV.shift
-  ruby 'scripts/download.rb', *ARGV
-  ARGV.each { |a| task(a.to_s) {} }
-end
-
-desc 'Merge given wallpaper folders into one'
-task :merge do
-  ARGV.shift
-  ruby 'scripts/merge_into.rb', *ARGV
-  ARGV.each { |a| task(a.to_s) {} }
-end
-
-desc 'Fix thumbnails in given dir'
-task :minify, [:dir] do |_task, args|
-  ruby 'scripts/minify.rb', args[:dir]
-end
