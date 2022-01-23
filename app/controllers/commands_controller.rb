@@ -37,6 +37,7 @@ class CommandsController < ApplicationController
 
   def delete_image
     image = Image.find(JSON.parse(request.body.read).fetch('image_id'))
+    image.thumbnail.delete unless image.thumbnail.nil?
     image.delete
     render json: { status: :ok }
   end
