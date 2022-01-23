@@ -35,7 +35,9 @@ class QueriesController < ApplicationController
     folder = Folder.find(params.fetch('folder_id'))
     page = params.fetch('page', '1').to_i
     images = folder.images.order(:created_at).page(page)
-    render json: { records: images.map(&method(:serialize_image)), has_next: !images.empty? && !images.last_page? }
+    has_next = !images.empty? && !images.last_page?
+    next_page = has_next ? page + 1 : nil
+    render json: { records: images.map(&method(:serialize_image)), page: { has_next: has_next, next: next_page } }
   end
 
   def image_src

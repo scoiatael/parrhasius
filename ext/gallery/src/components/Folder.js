@@ -11,9 +11,9 @@ function Folder({ folderId }) {
 
   const loadFunc = (index) => {
     getPhotos(folderId, index)
-      .then(({ records, has_next }) => {
+      .then(({ records, page }) => {
         setPages((p) => p.push(List.of(...records)));
-        setPaging({ has_next });
+        setPaging(page);
       })
       .catch(console.error.bind(console));
   };
