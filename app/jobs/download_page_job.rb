@@ -17,17 +17,16 @@ class DownloadPageJob < ApplicationJob
 
   def do_download(url, path:, folder:)
     pb = if Rails.env.development?
-           Parrhasius::ActiveJobPB.new(self)
-         else
            ProgressBar
+         else
+           Parrhasius::ActiveJobPB.new(self)
          end
     images = Parrhasius::Download.new(Parrhasius::Download.for(url), path, pb).run(url)
     folder.images.create(images.map { |image| { path: image.path, width: image.width, height: image.height } })
-    # Parrhasius::Dedup.new(db: "#{DIR}/index.pstore",
-    #                       dir: path,
-    #                       progress_bar: pb).run
+    Parrhasius::Dedup.new(db: "#{Parrhasius::DIR}/index.pstore",
+                          dir: path,
+                          progress_bar: pb).run
     Parrhasius::Minify.new(pb).run(src: path)
-    SERVE.refresh!
   rescue StandardError
     folder.delete
     raise

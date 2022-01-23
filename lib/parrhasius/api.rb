@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 require 'sinatra'
-require 'logger'
-
-logger = Logger.new($stdout)
-logger.level = Logger::DEBUG
 
 module Parrhasius
   class API < Sinatra::Application
