@@ -52,7 +52,7 @@ class QueriesController < ApplicationController
     image = Image.find(params.fetch('image_id'))
 
     send_file image.thumbnail.path,
-              filename: File.basename(image.path),
+              filename: File.basename(image.thumbnail.path),
               disposition: 'inline'
   end
 

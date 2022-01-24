@@ -16,20 +16,21 @@ class DownloadPageJob < ApplicationJob
   end
 
   def do_download(url, path:, folder:)
-    pb = if Rails.env.development?
-           ProgressBar
-         else
-           Parrhasius::ActiveJobPB.new(self)
-         end
     images = Parrhasius::Download.new(Parrhasius::Download.for(url), path, pb).run(url)
     folder.images.create!(images.map { |image| Image.params_from_minimagick(image) })
     Parrhasius::Dedup.new(progress_bar: pb).run(folder.images)
     folder.images.reload
-    Parrhasius::Minify.new(pb).run(folder.images).each do |img, dst|
-      Thumbnail.create!(path: dst, image: img)
-    end
+    Parrhasius::Minify.new(progress_bar: pb).run(folder.images)
   rescue StandardError
     folder.destroy if folder.images.empty?
     raise
+  end
+
+  def pb
+    if Rails.env.development?
+      ProgressBar
+    else
+      Parrhasius::ActiveJobPB.new(self)
+    end
   end
 end

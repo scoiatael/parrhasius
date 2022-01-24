@@ -7,9 +7,13 @@ class Image < ApplicationRecord
     { path: image.path, width: image.width, height: image.height }
   end
 
+  def thumbnail_dir
+    dir, = File.split(path)
+    File.join(dir, '.thumbnail')
+  end
+
   def thumbnail_path
-    dir, base = File.split(path)
-    File.join(dir, '.thumbnail', base)
+    File.join(thumbnail_dir, File.basename(path))
   end
 
   def unique?
