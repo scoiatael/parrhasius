@@ -11,5 +11,6 @@ namespace :folders do
       maybe_path = [img.path.sub('original', 'thumbnail'), img.thumbnail_path].select { |x| File.exist?(x) }.first
       Thumbnail.create!(image: img, path: maybe_path) unless maybe_path.nil?
     end
+    Parrhasius::Dedup.new(progress_bar: ProgressBar).run(images)
   end
 end
