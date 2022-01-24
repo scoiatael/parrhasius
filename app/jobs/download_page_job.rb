@@ -23,14 +23,13 @@ class DownloadPageJob < ApplicationJob
          end
     images = Parrhasius::Download.new(Parrhasius::Download.for(url), path, pb).run(url)
     folder.images.create!(images.map { |image| Image.params_from_minimagick(image) })
-    Parrhasius::Dedup.new(db: "#{Parrhasius::DIR}/index.pstore",
-                          dir: path,
-                          progress_bar: pb).run
+    Parrhasius::Dedup.new(progress_bar: pb).run(folder.images)
+    folder.images.reload
     Parrhasius::Minify.new(pb).run(folder.images).each do |img, dst|
       Thumbnail.create!(path: dst, image: img)
     end
   rescue StandardError
-    folder.delete if folder.images.empty?
+    folder.destroy if folder.images.empty?
     raise
   end
 end
