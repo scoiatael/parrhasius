@@ -17,9 +17,7 @@ class CommandsController < ApplicationController
 
   def delete_folder
     folder = Folder.find(JSON.parse(request.body.read).fetch('folder_id'))
-    folder.images.each { |i| i.thumbnail.delete unless i.thumbnail.nil? }
-    folder.images.delete_all
-    folder.delete
+    folder.destroy
     render json: { status: :ok }
   end
 
@@ -37,8 +35,7 @@ class CommandsController < ApplicationController
 
   def delete_image
     image = Image.find(JSON.parse(request.body.read).fetch('image_id'))
-    image.thumbnail.delete unless image.thumbnail.nil?
-    image.delete
+    image.destroy
     render json: { status: :ok }
   end
 end
