@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'sinatra'
+require 'base64'
 
 module Parrhasius
   class API < Sinatra::Application
@@ -19,6 +20,18 @@ module Parrhasius
           'Access-Control-Allow-Origin' => 'http://localhost:3000'
         )
       end
+    end
+
+    get '/image/:path' do |path|
+      cache_control :public
+      etag path
+
+      path = File.join(Parrhasius::DIR, Base64.urlsafe_decode64(path))
+
+      img = MiniMagick::Image.open(path)
+
+      content_type img.mime_type
+      send_file img.path
     end
   end
 end

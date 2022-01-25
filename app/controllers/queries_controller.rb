@@ -26,9 +26,9 @@ class QueriesController < ApplicationController
   end
 
   def folders
-    fs = Folder.all.map { |f| [f.id, { name: f.name, avatar: image_thumbnail_url(f.images.first&.id) }] }.to_h
-
-    render json: { folders: fs }
+    fs = Folder.eager_load(:thumbnail).all
+    json = fs.map { |f| [f.id, { name: f.name, avatar: image_url(f.avatar!) }] }.to_h
+    render json: { folders: json }
   end
 
   def folder_images
@@ -38,22 +38,6 @@ class QueriesController < ApplicationController
     has_next = !images.empty? && !images.last_page?
     next_page = has_next ? page + 1 : nil
     render json: { records: images.map(&method(:serialize_image)), page: { has_next: has_next, next: next_page } }
-  end
-
-  def image_src
-    image = Image.find(params.fetch('image_id'))
-
-    send_file image.path,
-              disposition: 'inline',
-              filename: File.basename(image.path)
-  end
-
-  def image_thumbnail
-    image = Image.find(params.fetch('image_id'))
-
-    send_file image.thumbnail.path,
-              filename: File.basename(image.thumbnail.path),
-              disposition: 'inline'
   end
 
   def folder_bundle
@@ -79,9 +63,16 @@ class QueriesController < ApplicationController
       title: File.basename(i.path),
       width: i.width,
       height: i.height,
-      src: image_thumbnail_url(i.id),
-      original: image_src_url(i.id)
+      src: image_url(i.thumbnail),
+      original: image_url(i)
     }
+  end
+
+  def image_url(image)
+    path = Pathname.new(image.path)
+    rel = path.relative? ? path.to_s : path.relative_path_from(Parrhasius::DIR).to_s
+    b64 = Base64.urlsafe_encode64(rel)
+    request.base_url + "/image/#{b64}"
   end
 
   def status(job)
