@@ -11,6 +11,7 @@ gem 'faraday_middleware'
 gem 'ffi'
 gem 'mini_magick'
 gem 'nokogiri'
+gem 'rdoc' # rails bails on prod without this
 gem 'ruby-progressbar'
 gem 'rubyzip'
 gem 'sinatra'
