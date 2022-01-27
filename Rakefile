@@ -21,6 +21,7 @@ end
 desc 'Start pre-compiled server'
 task :run do
   ENV['APP_ENV'] = 'production'
+  ENV['RAILS_ENV'] = 'production'
   sh 'puma', '--bind=tcp://0.0.0.0:4567', '--workers=4'
 end
 

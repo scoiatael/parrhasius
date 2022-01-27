@@ -10,7 +10,6 @@ function DownloadButton() {
   const onClick = async () => {
     const url = prompt("URL?", "https://boards.4chan.org/wg/...");
     const response = await download(url);
-    console.log({ response });
     const { queued, job_id: jobId } = await response.json();
     console.log({ queued, jobId });
     history.push(`/downloads/${jobId}`);

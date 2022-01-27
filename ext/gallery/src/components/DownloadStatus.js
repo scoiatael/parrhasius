@@ -25,28 +25,23 @@ function DownloadStatus({ onDone }) {
   const [status, setStatus] = useState(Map());
 
   useEffect(() => {
-    let mounted = true;
-    downloadStatus(jobId)
-      .on("node", "*.status.status", (status) => {
-        console.log({ status });
-        if (status === "completed" || status === "failed") {
-          history.push("/");
-          onDone();
-        }
-      })
-      .on("node", "events.{status}", (node) => {
-        const {
-          status: { step, progress, total },
-        } = node;
-        if (mounted) {
-          setStatus((st) => st.set(step, Math.floor((100 * progress) / total)));
-        }
-      })
-      .fail((err) => console.error("E", err));
-    return () => {
-      mounted = false;
+    const download = downloadStatus(jobId);
+    const listener = (node) => {
+      const {
+        status: { status, step, progress, total },
+      } = node;
+      if (status === "completed" || status === "failed") {
+        history.push("/");
+        onDone();
+      }
+      setStatus((st) => st.set(step, Math.floor((100 * progress) / total)));
     };
-  });
+    download.on("node", "events.{status}", listener);
+    download.fail((err) => console.error("E", err));
+    return () => {
+      download.removeListener(listener);
+    };
+  }, [history, setStatus, jobId, onDone]);
 
   const statusPs = status
     .toArray()

@@ -14,14 +14,14 @@ class QueriesController < ApplicationController
     response.headers['Last-Modified'] = Time.now.httpdate
 
     send_stream(filename: 'status.json', type: 'application/json', disposition: 'inline') do |stream|
-      stream.write('{"events":[')
+      stream.write("{\"events\":[\n")
       loop do
-        stream.write(JSON.dump(status(job)))
+        stream.write(JSON.dump(status(job)) + ",\n")
         break if job.completed? || job.failed?
 
         sleep 0.1
       end
-      stream.write(']}')
+      stream.write(JSON.dump(status(job)) + ']}')
     end
   end
 
