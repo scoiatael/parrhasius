@@ -29,16 +29,5 @@ module Parrhasius
     config.api_only = true
 
     config.logger = Logger.new(STDOUT)
-
-    if ENV['APP_ENV'] != 'production'
-      config.middleware.insert_before 0, Rack::Cors do
-        allow do
-          origins 'http://localhost:3000'
-          resource '*', headers: :any, methods: %i[get post patch put]
-        end
-      end
-    end
   end
-
-  DIR = File.expand_path(ENV['SERVE'] || './db')
 end

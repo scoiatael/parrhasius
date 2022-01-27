@@ -22,4 +22,4 @@ test:
 
 production:
   <<: *default
-  database: <%= ENV.fetch("RAILS_DB_LOCATION") %>/production.sqlite3
+  database: <%= ENV.fetch("RAILS_DB_LOCATION") { "db" } %>/production.sqlite3
