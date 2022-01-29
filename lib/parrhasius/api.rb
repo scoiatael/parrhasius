@@ -26,7 +26,8 @@ module Parrhasius
       cache_control :public
       etag path
 
-      path = File.join(Parrhasius::DIR, Base64.urlsafe_decode64(path))
+      path = File.expand_path(Base64.urlsafe_decode64(path), Parrhasius::DIR)
+      return 403 unless path.starts_with?(::Parrhasius::DIR)
 
       img = MiniMagick::Image.open(path)
 
