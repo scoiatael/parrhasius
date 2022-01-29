@@ -3,12 +3,11 @@ import Folder from "./components/Folder";
 import Slideshow from "./components/Slideshow";
 import ComicStrip from "./components/ComicStrip";
 import DownloadButton from "./components/DownloadButton";
+import RouteButton from "./components/RouteButton";
 import MergeButton from "./components/MergeButton";
 import BundleButton from "./components/BundleButton";
 import TrashButton from "./components/TrashButton";
 import DownloadStatus from "./components/DownloadStatus";
-import SlideshowButton from "./components/SlideshowButton";
-import ComicStripButton from "./components/ComicStripButton";
 import { getFolders, mergeFolders, deleteFolder, bundleFolder } from "./api";
 import { List, Map } from "immutable";
 import {
@@ -20,18 +19,23 @@ import {
   useParams,
 } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faList } from "@fortawesome/free-solid-svg-icons";
+import {
+  faList,
+  faCameraRetro,
+  faPlay,
+} from "@fortawesome/free-solid-svg-icons";
 
 function FolderProxy({ slideshow, ordered }) {
   const { folderId } = useParams();
+  const apiPath = "/folder/" + folderId + "/images";
 
   if (ordered) {
-    return <ComicStrip folderId={folderId} key={folderId} />;
+    return <ComicStrip apiPath={apiPath} key={folderId} />;
   }
   if (slideshow) {
-    return <Slideshow folderId={folderId} key={folderId} />;
+    return <Slideshow apiPath={apiPath} key={folderId} />;
   }
-  return <Folder folderId={folderId} key={folderId} />;
+  return <Folder apiPath={apiPath} key={folderId} />;
 }
 
 function Folders() {
@@ -119,7 +123,7 @@ function App() {
   return (
     <Router>
       <div>
-        <nav>
+        <nav className="nav-extended">
           <div className="nav-wrapper">
             <div data-target="sidenav" className="sidenav-trigger">
               <FontAwesomeIcon icon={faList} />
@@ -132,13 +136,20 @@ function App() {
             </ul>
             <ul className="right">
               <li style={{ marginRight: "0.2em" }}>
-                <SlideshowButton />
+                <RouteButton icon={faPlay} suffix="/slideshow" />
               </li>
               <li style={{ marginRight: "0.2em" }}>
-                <ComicStripButton />
+                <RouteButton
+                  style="purple lighten-1"
+                  icon={faCameraRetro}
+                  suffix="/ordered"
+                />
               </li>
               <li>
                 <DownloadButton />
+              </li>
+              <li className="tab">
+                <Link to="/liked">LIKED</Link>
               </li>
             </ul>
           </div>
@@ -155,6 +166,18 @@ function App() {
 
           <Route path="/downloads/:jobId">
             <DownloadStatus onDone={refresh} />
+          </Route>
+
+          <Route path="/liked/ordered">
+            <ComicStrip apiPath="/liked_images" />;
+          </Route>
+
+          <Route path="/liked/slideshow">
+            <Slideshow apiPath="/liked_images" />;
+          </Route>
+
+          <Route path="/liked">
+            <Folder apiPath="/liked_images" />;
           </Route>
 
           <Route path="/">

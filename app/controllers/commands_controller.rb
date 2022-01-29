@@ -38,4 +38,10 @@ class CommandsController < ApplicationController
     image.destroy
     render json: { status: :ok }
   end
+
+  def like_image
+    image = Image.find(JSON.parse(request.body.read).fetch('image_id'))
+    image.update!(liked: true)
+    render json: { status: :ok }
+  end
 end

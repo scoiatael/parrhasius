@@ -1,16 +1,16 @@
 import React, { useCallback, useState } from "react";
 import Photos from "./Photos";
-import { getPhotos, deletePhoto } from "../api";
+import { getPhotos, deletePhoto, likePhoto } from "../api";
 import InfiniteScroll from "react-infinite-scroller";
 import { List } from "immutable";
 import Loader from "./Loader";
 
-function Folder({ folderId }) {
+function Folder({ apiPath }) {
   const [pages, setPages] = useState(List.of());
   const [paging, setPaging] = useState({ has_next: true });
 
   const loadFunc = (index) => {
-    getPhotos(folderId, index)
+    getPhotos(apiPath, index)
       .then(({ records, page }) => {
         setPages((p) => p.push(List.of(...records)));
         setPaging(page);
@@ -35,8 +35,18 @@ function Folder({ folderId }) {
     [pages]
   );
 
+  const onLike = useCallback(
+    (photo) => likePhoto(photo.id).catch(console.error.bind(console)),
+    []
+  );
+
   const items = pages.map((items, index) => (
-    <Photos key={index} photos={items.toArray()} onDelete={onDelete(index)} />
+    <Photos
+      key={index}
+      photos={items.toArray()}
+      onDelete={onDelete(index)}
+      onLike={onLike}
+    />
   ));
 
   return (

@@ -7,8 +7,11 @@ Rails.application.routes.draw do
   get '/api/folder/:folder_id/images', to: 'queries#folder_images'
   get '/api/folder/:folder_id/images/:page', to: 'queries#folder_images'
   get '/api/folder/:folder_id/bundle', to: 'queries#folder_bundle'
+  get '/api/liked_images', to: 'queries#liked_images'
+  get '/api/liked_images/:page', to: 'queries#liked_images'
 
   post '/api/delete_folder', to: 'commands#delete_folder'
   post '/api/merge_folders', to: 'commands#merge_folders'
   post '/api/delete_image', to: 'commands#delete_image'
+  post '/api/like_image', to: 'commands#like_image'
 end

@@ -23,4 +23,8 @@ class Image < ApplicationRecord
   rescue ActiveRecord::RecordNotUnique
     false
   end
+
+  def liked?
+    !!liked
+  end
 end

@@ -40,6 +40,14 @@ class QueriesController < ApplicationController
     render json: { records: images.map(&method(:serialize_image)), page: { has_next: has_next, next: next_page } }
   end
 
+  def liked_images
+    page = params.fetch('page', '1').to_i
+    images = Image.where(liked: true).order(:created_at).page(page)
+    has_next = !images.empty? && !images.last_page?
+    next_page = has_next ? page + 1 : nil
+    render json: { records: images.map(&method(:serialize_image)), page: { has_next: has_next, next: next_page } }
+  end
+
   def folder_bundle
     folder = Folder.find(params.fetch('folder_id'))
 
@@ -64,7 +72,8 @@ class QueriesController < ApplicationController
       width: i.width,
       height: i.height,
       src: image_url(i.thumbnail),
-      original: image_url(i)
+      original: image_url(i),
+      liked: i.liked?
     }
   end
 

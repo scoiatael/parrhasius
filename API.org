@@ -37,19 +37,19 @@ GET http://localhost:9393/api/folders
 #+end_src
 
 #+RESULTS:
-: {
-:   "folders": {
-:     "14": "1642785747",
-:     "17": "1642786440",
-:     "19": "1642786739",
-:     "20": "1642786885",
-:     "21": "1642788586"
-:   }
-: }
+#+begin_example
+{
+  "folders": {
+    "37": {
+      "name": "1642965071",
+      "avatar": "http://localhost:9393/image/MTY0Mjk2NTA3MS8udGh1bWJuYWlsLzBlYjZkMjgzLTk0MGItNDFkMy1hY2QzLTFiOWNiZGFlZGIwMC5qcGc="
+    }
+}
+#+end_example
 
 ** GET /api/folder/:folder_id/images: list images inside folder
 #+begin_src http :pretty
-GET http://localhost:9393/api/folder/21/images
+GET http://localhost:9393/api/folder/37/images
 #+end_src
 
 #+RESULTS:
@@ -57,109 +57,77 @@ GET http://localhost:9393/api/folder/21/images
 {
   "records": [
     {
-      "id": 48,
-      "title": "ff155cbe-fee6-4522-938f-614401a6c56c.jpg",
-      "width": 1920,
-      "height": 1080,
-      "src": "http://localhost:9393/api/image/48/thumbnail",
-      "original": "http://localhost:9393/api/image/48/original"
+      "id": 866,
+      "title": "0eb6d283-940b-41d3-acd3-1b9cbdaedb00.jpg",
+      "width": 532,
+      "height": 1160,
+      "src": "http://localhost:9393/image/MTY0Mjk2NTA3MS8udGh1bWJuYWlsLzBlYjZkMjgzLTk0MGItNDFkMy1hY2QzLTFiOWNiZGFlZGIwMC5qcGc=",
+      "original": "http://localhost:9393/image/MTY0Mjk2NTA3MS8wZWI2ZDI4My05NDBiLTQxZDMtYWNkMy0xYjljYmRhZWRiMDAuanBn",
+      "liked": true
     },
     {
-      "id": 49,
-      "title": "539a4799-5ca7-485d-87a0-63fbe797d3b9.jpg",
-      "width": 1920,
-      "height": 817,
-      "src": "http://localhost:9393/api/image/49/thumbnail",
-      "original": "http://localhost:9393/api/image/49/original"
-    },
-    {
-      "id": 50,
-      "title": "30e2500c-07fe-4082-a007-e53869e4870e.jpg",
-      "width": 864,
+      "id": 867,
+      "title": "cf5d4086-bc1b-46bd-8026-85dae3d482ab.jpg",
+      "width": 1080,
       "height": 1349,
-      "src": "http://localhost:9393/api/image/50/thumbnail",
-      "original": "http://localhost:9393/api/image/50/original"
-    },
-    {
-      "id": 51,
-      "title": "f26127ad-35e5-4638-bfba-f37d69940888.jpg",
-      "width": 1920,
-      "height": 1084,
-      "src": "http://localhost:9393/api/image/51/thumbnail",
-      "original": "http://localhost:9393/api/image/51/original"
-    },
-    {
-      "id": 52,
-      "title": "401a4b3d-1fee-41da-8489-7f0c8807c3fb.jpg",
-      "width": 1536,
-      "height": 2172,
-      "src": "http://localhost:9393/api/image/52/thumbnail",
-      "original": "http://localhost:9393/api/image/52/original"
-    },
-    {
-      "id": 53,
-      "title": "fb9c96b8-c153-4fd6-88b7-e3db4c6e6605.jpg",
-      "width": 1920,
-      "height": 1123,
-      "src": "http://localhost:9393/api/image/53/thumbnail",
-      "original": "http://localhost:9393/api/image/53/original"
-    },
-    {
-      "id": 54,
-      "title": "3d523fe7-2da0-4a51-b470-6454ec203d3f.jpg",
-      "width": 1125,
-      "height": 1649,
-      "src": "http://localhost:9393/api/image/54/thumbnail",
-      "original": "http://localhost:9393/api/image/54/original"
-    },
-    {
-      "id": 55,
-      "title": "5399c181-c3c7-4153-b64c-ed4db471f3a8.jpg",
-      "width": 1920,
-      "height": 1080,
-      "src": "http://localhost:9393/api/image/55/thumbnail",
-      "original": "http://localhost:9393/api/image/55/original"
-    },
-    {
-      "id": 56,
-      "title": "93cbc33a-0af8-4390-8acd-5bd46de005da.jpg",
-      "width": 2904,
-      "height": 1944,
-      "src": "http://localhost:9393/api/image/56/thumbnail",
-      "original": "http://localhost:9393/api/image/56/original"
-    },
-    {
-      "id": 57,
-      "title": "e5caf386-92d1-4f1c-b05f-d26b9966ff8f.jpg",
-      "width": 643,
-      "height": 900,
-      "src": "http://localhost:9393/api/image/57/thumbnail",
-      "original": "http://localhost:9393/api/image/57/original"
-    },
-    {
-      "id": 58,
-      "title": "a4921e07-7ed9-4f02-8007-fbf72906475f.jpg",
-      "width": 1920,
-      "height": 1084,
-      "src": "http://localhost:9393/api/image/58/thumbnail",
-      "original": "http://localhost:9393/api/image/58/original"
-    },
-    {
-      "id": 59,
-      "title": "17d48606-786f-436f-b443-6d7bcbe8d017.jpg",
-      "width": 1920,
-      "height": 1920,
-      "src": "http://localhost:9393/api/image/59/thumbnail",
-      "original": "http://localhost:9393/api/image/59/original"
-    },
-    {
-      "id": 60,
-      "title": "667b3107-aa43-4166-a1bb-3ca913d24e1a.jpg",
-      "width": 1920,
-      "height": 1922,
-      "src": "http://localhost:9393/api/image/60/thumbnail",
-      "original": "http://localhost:9393/api/image/60/original"
+      "src": "http://localhost:9393/image/MTY0Mjk2NTA3MS8udGh1bWJuYWlsL2NmNWQ0MDg2LWJjMWItNDZiZC04MDI2LTg1ZGFlM2Q0ODJhYi5qcGc=",
+      "original": "http://localhost:9393/image/MTY0Mjk2NTA3MS9jZjVkNDA4Ni1iYzFiLTQ2YmQtODAyNi04NWRhZTNkNDgyYWIuanBn",
+      "liked": false
     }
-  ]
+  ],
+  "page": {
+    "has_next": true,
+    "next": 2
+  }
+}
+#+end_example
+
+** POST /api/like_image: mark image as "liked"
+#+begin_src http :pretty
+POST http://localhost:9393/api/like_image
+Content-Type: application/json
+Accept: application/json,text/*;q=0.99
+
+{"image_id": 866}
+#+end_src
+
+#+RESULTS:
+: {
+:   "status": "ok"
+: }
+
+
+** GET /api/liked_images: list liked images
+#+begin_src http :pretty
+GET http://localhost:9393/api/liked_images
+#+end_src
+
+#+RESULTS:
+#+begin_example
+{
+  "records": [
+    {
+      "id": 866,
+      "title": "0eb6d283-940b-41d3-acd3-1b9cbdaedb00.jpg",
+      "width": 532,
+      "height": 1160,
+      "src": "http://localhost:9393/image/MTY0Mjk2NTA3MS8udGh1bWJuYWlsLzBlYjZkMjgzLTk0MGItNDFkMy1hY2QzLTFiOWNiZGFlZGIwMC5qcGc=",
+      "original": "http://localhost:9393/image/MTY0Mjk2NTA3MS8wZWI2ZDI4My05NDBiLTQxZDMtYWNkMy0xYjljYmRhZWRiMDAuanBn",
+      "liked": true
+    },
+    {
+      "id": 1473,
+      "title": "0033_8c01_620.jpeg",
+      "width": 620,
+      "height": 820,
+      "src": "http://localhost:9393/image/c291cC90aHVtYm5haWwvMDAzM184YzAxXzYyMC5qcGVn",
+      "original": "http://localhost:9393/image/c291cC9vcmlnaW5hbC8wMDMzXzhjMDFfNjIwLmpwZWc=",
+      "liked": true
+    }
+  ],
+  "page": {
+    "has_next": false,
+    "next": null
+  }
 }
 #+end_example

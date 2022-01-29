@@ -35,10 +35,8 @@ export async function bundleFolder(folder_id) {
   window.location = server() + "/api/folder/" + folder_id + "/bundle";
 }
 
-export async function getPhotos(folder_id, page) {
-  const response = await fetch(
-    server() + "/api/folder/" + folder_id + "/images/" + page
-  );
+export async function getPhotos(endpoint, page) {
+  const response = await fetch(server() + "/api/" + endpoint + "/" + page);
   if (response.status !== 200) {
     console.error(response);
     throw new Error(`HTTP returned: ${response.status}`);
@@ -47,11 +45,11 @@ export async function getPhotos(folder_id, page) {
   return all;
 }
 
-export async function getAllPhotos(folder_id) {
+export async function getAllPhotos(apiPath) {
   let next = 0;
   let all = List.of();
   while (next !== null) {
-    const { records, page } = await getPhotos(folder_id, next);
+    const { records, page } = await getPhotos(apiPath, next);
     all = all.push(...records);
     next = page.next;
   }
@@ -60,6 +58,16 @@ export async function getAllPhotos(folder_id) {
 
 export async function deletePhoto(image_id) {
   const response = await fetch(server() + "/api/delete_image", {
+    method: "POST",
+    body: JSON.stringify({ image_id }),
+  });
+  if (response.status !== 200) {
+    throw new Error(`HTTP returned: ${response.status}`);
+  }
+}
+
+export async function likePhoto(image_id) {
+  const response = await fetch(server() + "/api/like_image", {
     method: "POST",
     body: JSON.stringify({ image_id }),
   });
