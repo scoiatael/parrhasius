@@ -4,6 +4,7 @@ source 'https://rubygems.org'
 
 # core
 gem 'concurrent-ruby'
+gem 'dotenv-rails'
 gem 'down'
 gem 'faraday'
 gem 'faraday-cookie_jar'

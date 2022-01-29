@@ -7,6 +7,8 @@ require 'rack/cors'
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
+Dotenv::Railtie.load
+
 require_relative '../lib/parrhasius'
 
 module Parrhasius
