@@ -7,14 +7,14 @@
 
 # Read more: https://github.com/cyu/rack-cors
 
-if Rails.env.development?
-  Rails.application.config.middleware.insert_before 0, Rack::Cors do
-    allow do
-      origins 'http://127.0.0.1:3000', 'http://localhost:3000'
+# if Rails.env.development?
+#   Rails.application.config.middleware.insert_before 0, Rack::Cors do
+#     allow do
+#       origins 'http://127.0.0.1:3000', 'http://localhost:3000'
 
-      resource '*',
-               headers: :any,
-               methods: %i[get post put patch delete options head]
-    end
-  end
-end
+#       resource '*',
+#                headers: :any,
+#                methods: %i[get post put patch delete options head]
+#     end
+#   end
+# end
