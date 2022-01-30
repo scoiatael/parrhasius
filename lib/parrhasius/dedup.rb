@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Parrhasius
-  class Dedup
+  class Dedup # rubocop:todo Style/Documentation
     def initialize(progress_bar:)
       @pb = PB.new(progress_bar)
     end

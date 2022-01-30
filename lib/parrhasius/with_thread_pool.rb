@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 module Parrhasius
-  class WithThreadPool
+  class WithThreadPool # rubocop:todo Style/Documentation
     def initialize(**vars)
       @wrapped = {}
       vars.each do |name, val|

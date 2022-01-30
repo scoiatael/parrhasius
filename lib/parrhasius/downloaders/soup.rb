@@ -12,7 +12,7 @@ module Parrhasius
     MAX_ITERATIONS = 20
     MAX_REDIRECTS = 6
 
-    class Soup
+    class Soup # rubocop:todo Style/Documentation
       include Enumerable
 
       def download(link)
@@ -22,7 +22,8 @@ module Parrhasius
         [img_link.to_s.split('/').last, Down.download(img_link).read]
       end
 
-      def enumerate_link(base_link)
+      # rubocop:todo Metrics/MethodLength
+      def enumerate_link(base_link) # rubocop:todo Metrics/AbcSize, Metrics/MethodLength
         links = []
         link = base_link
         iterations = 0
@@ -44,6 +45,7 @@ module Parrhasius
 
         links
       end
+      # rubocop:enable Metrics/MethodLength
 
       def initialize(main_page)
         @connection = connect!
@@ -72,7 +74,7 @@ module Parrhasius
         @connection.get(url, nil, 'Cookie' => cookies)
       end
 
-      def fetch_with_redirect(url, cookies: nil, limit: MAX_REDIRECTS)
+      def fetch_with_redirect(url, cookies: nil, limit: MAX_REDIRECTS) # rubocop:todo Lint/UnusedMethodArgument
         MAX_REDIRECTS.times do
           r = fetch(url, cookies: cookies)
           return r if r.status == 200

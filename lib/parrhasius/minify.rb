@@ -4,7 +4,7 @@ require 'mini_magick'
 require 'fileutils'
 
 module Parrhasius
-  class Minify
+  class Minify # rubocop:todo Style/Documentation
     def initialize(progress_bar:)
       @progress_bar = progress_bar
     end
@@ -34,7 +34,7 @@ module Parrhasius
       images.map(&:thumbnail_dir).uniq.each { |d| FileUtils.mkdir_p(d) }
     end
 
-    def resize(img, pb)
+    def resize(img, pb) # rubocop:todo Naming/MethodParameterName
       lambda do
         image = MiniMagick::Image.open(img.path)
         image.resize '256x256'

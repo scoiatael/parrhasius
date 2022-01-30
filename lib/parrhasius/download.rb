@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-Dir[__dir__ + '/downloaders/*.rb'].each do |f|
+Dir["#{__dir__}/downloaders/*.rb"].each do |f|
   require_relative f
 end
 
 require_relative './with_thread_pool'
 
 module Parrhasius
-  class Download
+  class Download # rubocop:todo Style/Documentation
     def initialize(downloader, storage, progress_bar)
       @downloader = downloader
       @storage = storage
@@ -41,15 +41,15 @@ module Parrhasius
       end
     end
 
-    def download_links(pool, downloads, pb:)
+    # rubocop:todo Naming/MethodParameterName
+    def download_links(pool, downloads, pb:) # rubocop:todo Metrics/MethodLength, Naming/MethodParameterName
+      # rubocop:enable Naming/MethodParameterName
       promises = downloads.flat_map do |download|
         download.map do |link|
           Concurrent::Promise.execute(executor: pool) do
             filename, data = download.download(link)
             path = File.join(@storage, filename)
-            File.open(path, 'wb') do |f|
-              f.write(data)
-            end
+            File.binwrite(path, data)
             pb.borrow(&:increment)
             MiniMagick::Image.new(path)
           end

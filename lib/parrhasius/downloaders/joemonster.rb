@@ -6,7 +6,7 @@ require 'securerandom'
 
 module Parrhasius
   module Downloaders
-    class Joemonster
+    class Joemonster # rubocop:todo Style/Documentation
       include Enumerable
 
       def download(img)
@@ -26,7 +26,7 @@ module Parrhasius
       end
 
       def ext(link)
-        '.' + link.split('.').last
+        ".#{link.split('.').last}"
       end
 
       def each(&block)

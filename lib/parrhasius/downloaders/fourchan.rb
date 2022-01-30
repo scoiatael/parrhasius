@@ -6,14 +6,14 @@ require 'securerandom'
 
 module Parrhasius
   module Downloaders
-    class FourChan
+    class FourChan # rubocop:todo Style/Documentation
       include Enumerable
 
       def download(link)
         img_link = link.attributes['href']
         return unless img_link
 
-        [SecureRandom.uuid + ext(img_link.value), Down.download('https:' + img_link.value).read]
+        [SecureRandom.uuid + ext(img_link.value), Down.download("https:#{img_link.value}").read]
       end
 
       def enumerate_link(link)
@@ -28,7 +28,7 @@ module Parrhasius
       end
 
       def ext(link)
-        '.' + link.split('.').last
+        ".#{link.split('.').last}"
       end
 
       def each(&block)
