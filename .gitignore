@@ -29,9 +29,7 @@
 !/tmp/storage/
 !/tmp/storage/.keep
 
+/public/assets
+
 # Ignore master key for decrypting credentials and more.
 /config/master.key
-
-# A conflict since rails and sinatra both use db
-!/db/migrate/
-!/db/seeds.rb
