@@ -22,7 +22,7 @@ task :run do
   ENV['APP_ENV'] = 'production'
   ENV['RAILS_ENV'] = 'production'
   ENV['RAILS_SERVE_STATIC_FILES'] ||= 'true'
-  sh 'puma', '--bind=tcp://0.0.0.0:4567', '--workers=4'
+  sh 'puma', '--bind=tcp://127.0.0.1:4567', '--workers=4'
 end
 
 # Can't multitask because of chdirs inside
