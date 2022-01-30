@@ -2,7 +2,7 @@ import oboe from "oboe";
 import { List } from "immutable";
 
 function server() {
-  return process.env.NODE_ENV === "production" ? "" : "http://localhost:9393";
+  return "";
 }
 
 export async function getFolders() {

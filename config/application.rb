@@ -32,6 +32,8 @@ module Parrhasius
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
 
-    config.logger = Logger.new($stdout)
+    logger           = ActiveSupport::Logger.new(STDOUT)
+    logger.formatter = config.log_formatter
+    config.logger = ActiveSupport::TaggedLogging.new(logger)
   end
 end

@@ -16,5 +16,6 @@
 # and, you'll have to watch "config/Guardfile" instead of "Guardfile"
 guard 'rack', port: 9393, host: '127.0.0.1' do
   watch('Gemfile.lock')
-  watch(/^(config|lib|app)/)
+  watch(/^(config|lib)/)
+  watch(%r{^app/(channels|controllers|helpers|jobs|mailers|models|views)})
 end
