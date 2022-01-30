@@ -1411,6 +1411,11 @@
     "@types/istanbul-reports" "^1.1.1"
     "@types/yargs" "^13.0.0"
 
+"@materializecss/materialize@^1.1.0-alpha":
+  version "1.1.0-alpha"
+  resolved "https://registry.yarnpkg.com/@materializecss/materialize/-/materialize-1.1.0-alpha.tgz#448e742f7f4346d1dee11390a9e567545a139c49"
+  integrity sha512-dOAcIAe4L7kGtZ8V5oSxUrwHOsPGxfRwefvRk/jRcPwtZfmLoiQtS37JO0p9PTdkCj+aQmqUOzHoRhaF3TxmAg==
+
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@mrmlnc/readdir-enhanced/-/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"
