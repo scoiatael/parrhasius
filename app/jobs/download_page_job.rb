@@ -1,4 +1,6 @@
-class DownloadPageJob < ApplicationJob
+# frozen_string_literal: true
+
+class DownloadPageJob < ApplicationJob # rubocop:todo Style/Documentation
   include ActiveJob::Status
 
   queue_as :default
@@ -15,7 +17,7 @@ class DownloadPageJob < ApplicationJob
     { path: dir, folder: Folder.create!(name: fname) }
   end
 
-  def do_download(url, path:, folder:)
+  def do_download(url, path:, folder:) # rubocop:todo Metrics/AbcSize
     images = Parrhasius::Download.new(Parrhasius::Download.for(url), path, pb).run(url)
     folder.images.create!(images.map { |image| Image.params_from_minimagick(image) })
     Parrhasius::Dedup.new(progress_bar: pb).run(folder.images)

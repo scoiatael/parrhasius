@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 module Parrhasius
-  class PB
-    class Enum
+  class PB # rubocop:todo Style/Documentation
+    class Enum # rubocop:todo Style/Documentation
       include Enumerable
 
-      def initialize(pb, arr)
+      def initialize(pb, arr) # rubocop:todo Naming/MethodParameterName
         @pb = pb
         @arr = arr
       end

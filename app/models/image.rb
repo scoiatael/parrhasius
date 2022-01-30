@@ -1,4 +1,6 @@
-class Image < ApplicationRecord
+# frozen_string_literal: true
+
+class Image < ApplicationRecord # rubocop:todo Style/Documentation
   belongs_to :folder
   has_one :thumbnail, dependent: :destroy
   has_one :dhash, dependent: :destroy

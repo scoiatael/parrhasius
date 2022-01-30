@@ -3,7 +3,7 @@
 require 'ffi'
 
 module Parrhasius
-  module Hash
+  module Hash # rubocop:todo Style/Documentation
     extend FFI::Library
     ffi_lib File.expand_path('../parrhasius.so', __dir__)
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :folders do
   desc 'Import folder into sqlite db'
   task :import, [:path] => :environment do |_t, args|

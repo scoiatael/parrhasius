@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-class CommandsController < ApplicationController
+class CommandsController < ApplicationController # rubocop:todo Style/Documentation
   include ActionController::MimeResponds
 
-  def download
+  def download # rubocop:todo Metrics/AbcSize
     payload = JSON.parse(request.body.read)
     fname = Time.now.to_i.to_s
 

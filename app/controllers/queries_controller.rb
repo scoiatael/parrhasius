@@ -2,10 +2,10 @@
 
 require 'zip'
 
-class QueriesController < ApplicationController
+class QueriesController < ApplicationController # rubocop:todo Style/Documentation
   include ActionController::Live
 
-  def job_status
+  def job_status # rubocop:todo Metrics/AbcSize, Metrics/MethodLength
     job = ActiveJob::Status.get(params.fetch('job_id'))
 
     return render json: { events: [status(job)] } if job.completed? || job.failed?
@@ -16,22 +16,22 @@ class QueriesController < ApplicationController
     send_stream(filename: 'status.json', type: 'application/json', disposition: 'inline') do |stream|
       stream.write("{\"events\":[\n")
       loop do
-        stream.write(JSON.dump(status(job)) + ",\n")
+        stream.write("#{JSON.dump(status(job))},\n")
         break if job.completed? || job.failed?
 
         sleep 0.1
       end
-      stream.write(JSON.dump(status(job)) + ']}')
+      stream.write("#{JSON.dump(status(job))}]}")
     end
   end
 
   def folders
     fs = Folder.eager_load(:thumbnail).all
-    json = fs.map { |f| [f.id, { name: f.name, avatar: image_url(f.avatar!) }] }.to_h
+    json = fs.to_h { |f| [f.id, { name: f.name, avatar: image_url(f.avatar!) }] }
     render json: { folders: json }
   end
 
-  def folder_images
+  def folder_images # rubocop:todo Metrics/AbcSize
     folder = Folder.find(params.fetch('folder_id'))
     page = params.fetch('page', '1').to_i
     images = folder.images.order(:created_at).page(page)
@@ -48,7 +48,7 @@ class QueriesController < ApplicationController
     render json: { records: images.map(&method(:serialize_image)), page: { has_next: has_next, next: next_page } }
   end
 
-  def folder_bundle
+  def folder_bundle # rubocop:todo Metrics/AbcSize
     folder = Folder.find(params.fetch('folder_id'))
 
     tmp = Tempfile.new([folder.name, '.zip'], '/tmp')
@@ -65,7 +65,7 @@ class QueriesController < ApplicationController
 
   private
 
-  def serialize_image(i)
+  def serialize_image(i) # rubocop:todo Naming/MethodParameterName
     {
       id: i.id,
       title: File.basename(i.path),

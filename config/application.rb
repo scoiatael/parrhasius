@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'boot'
 
 require 'rails/all'
@@ -12,7 +14,7 @@ Dotenv::Railtie.load
 require_relative '../lib/parrhasius'
 
 module Parrhasius
-  class Application < Rails::Application
+  class Application < Rails::Application # rubocop:todo Style/Documentation
     config.active_job.queue_adapter = :sucker_punch
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.0
@@ -30,6 +32,6 @@ module Parrhasius
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
 
-    config.logger = Logger.new(STDOUT)
+    config.logger = Logger.new($stdout)
   end
 end

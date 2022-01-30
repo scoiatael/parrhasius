@@ -8,4 +8,4 @@ require_relative 'parrhasius/pb'
 require_relative 'parrhasius/active_job_pb'
 require_relative 'parrhasius/api'
 
-module Parrhasius; end
+module Parrhasius; end # rubocop:todo Style/Documentation

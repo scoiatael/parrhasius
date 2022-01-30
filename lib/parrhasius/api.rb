@@ -4,7 +4,7 @@ require 'sinatra'
 require 'base64'
 
 module Parrhasius
-  class API < Sinatra::Application
+  class API < Sinatra::Application # rubocop:todo Style/Documentation
     if ENV['APP_ENV'] == 'production'
       set :public_folder, 'ext/gallery/build'
       set :base_path, ''

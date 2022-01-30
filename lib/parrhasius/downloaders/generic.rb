@@ -6,7 +6,7 @@ require 'securerandom'
 
 module Parrhasius
   module Downloaders
-    class Generic
+    class Generic # rubocop:todo Style/Documentation
       include Enumerable
 
       def download(img_link)
@@ -16,7 +16,7 @@ module Parrhasius
       def enumerate_link(link)
         html = Nokogiri(Down.download(link).read)
 
-        html.search('a img').map(&:parent).map { |x| link(x) }.reject(&:nil?)
+        html.search('a img').map(&:parent).map { |x| link(x) }.compact
       end
 
       def initialize(main_page)
@@ -25,7 +25,7 @@ module Parrhasius
       end
 
       def ext(link)
-        '.' + link.split('.').last
+        ".#{link.split('.').last}"
       end
 
       def each(&block)
@@ -38,7 +38,7 @@ module Parrhasius
 
       private
 
-      def link(a)
+      def link(a) # rubocop:todo Naming/MethodParameterName
         img_link = a.attributes['href']
         return unless img_link
 
