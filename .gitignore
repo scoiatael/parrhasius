@@ -38,3 +38,7 @@
 !/app/assets/builds/.keep
 
 /node_modules
+
+# A conflict since rails and sinatra both use db
+!/db/migrate/
+!/db/seeds.rb
