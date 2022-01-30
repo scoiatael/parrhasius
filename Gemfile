@@ -33,7 +33,9 @@ group :development do
 end
 
 # RAILS
+gem 'haml-rails', '~> 2.0'
 gem 'jbuilder'
+gem 'jsbundling-rails'
 gem 'rails', '~> 7.0.0'
 gem 'sqlite3', '~> 1.4'
 

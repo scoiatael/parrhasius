@@ -81,10 +81,15 @@ GEM
     diff-lcs (1.5.0)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
+    dotenv (2.7.6)
+    dotenv-rails (2.7.6)
+      dotenv (= 2.7.6)
+      railties (>= 3.2)
     down (5.2.4)
       addressable (~> 2.8)
     e2mmap (0.1.0)
     erubi (1.10.0)
+    erubis (2.7.0)
     faraday (1.9.1)
       faraday-em_http (~> 1.0)
       faraday-em_synchrony (~> 1.0)
@@ -130,6 +135,20 @@ GEM
       ffi
       guard (~> 2.3)
       spoon
+    haml (5.2.2)
+      temple (>= 0.8.0)
+      tilt
+    haml-rails (2.0.1)
+      actionpack (>= 5.1)
+      activesupport (>= 5.1)
+      haml (>= 4.0.6, < 6.0)
+      html2haml (>= 1.0.1)
+      railties (>= 5.1)
+    html2haml (2.2.0)
+      erubis (~> 2.7.0)
+      haml (>= 4.0, < 6)
+      nokogiri (>= 1.6.0)
+      ruby_parser (~> 3.5)
     http-cookie (1.0.4)
       domain_name (~> 0.5)
     i18n (1.8.11)
@@ -141,6 +160,8 @@ GEM
     jbuilder (2.11.5)
       actionview (>= 5.0.0)
       activesupport (>= 5.0.0)
+    jsbundling-rails (1.0.0)
+      railties (>= 6.0.0)
     kaminari (1.2.2)
       activesupport (>= 4.1.0)
       kaminari-actionview (= 1.2.2)
@@ -260,7 +281,10 @@ GEM
       parser (>= 3.0.1.1)
     ruby-progressbar (1.11.0)
     ruby2_keywords (0.0.5)
+    ruby_parser (3.18.1)
+      sexp_processor (~> 4.16)
     rubyzip (2.3.2)
+    sexp_processor (4.16.0)
     shellany (0.0.1)
     shotgun (0.9.2)
       rack (>= 1.0)
@@ -290,6 +314,7 @@ GEM
     stringio (3.0.1)
     sucker_punch (3.0.1)
       concurrent-ruby (~> 1.0)
+    temple (0.8.2)
     thor (1.2.1)
     tilt (2.0.10)
     tzinfo (2.0.4)
@@ -314,6 +339,7 @@ DEPENDENCIES
   bootsnap
   concurrent-ruby
   debug
+  dotenv-rails
   down
   faraday
   faraday-cookie_jar
@@ -321,7 +347,9 @@ DEPENDENCIES
   ffi
   guard
   guard-rack
+  haml-rails (~> 2.0)
   jbuilder
+  jsbundling-rails
   kaminari
   mini_magick
   nokogiri
