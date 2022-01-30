@@ -14,8 +14,7 @@ end
 
 desc 'Start dev frontend reloader'
 task :'dev-npm-start' do
-  Dir.chdir File.expand_path('ext/gallery', __dir__)
-  sh 'npm', 'start'
+  sh 'yarn', 'build', '--watch'
 end
 
 desc 'Start pre-compiled server'
@@ -30,7 +29,6 @@ desc 'Build assets'
 task build: %w[build-gallery compile]
 
 task :'build-gallery' do
-  Dir.chdir File.expand_path('ext/gallery', __dir__)
   sh 'npm', 'run', 'build'
 end
 
