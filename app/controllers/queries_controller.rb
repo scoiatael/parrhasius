@@ -34,7 +34,7 @@ class QueriesController < ApplicationController # rubocop:todo Style/Documentati
   def folder_images # rubocop:todo Metrics/AbcSize
     folder = Folder.find(params.fetch('folder_id'))
     page = params.fetch('page', '1').to_i
-    images = folder.images.order(:created_at).page(page)
+    images = folder.images.eager_load(:thumbnail).order(:created_at).page(page)
     has_next = !images.empty? && !images.last_page?
     next_page = has_next ? page + 1 : nil
     render json: { records: images.map(&method(:serialize_image)), page: { has_next: has_next, next: next_page } }
@@ -42,7 +42,7 @@ class QueriesController < ApplicationController # rubocop:todo Style/Documentati
 
   def liked_images
     page = params.fetch('page', '1').to_i
-    images = Image.where(liked: true).order(:created_at).page(page)
+    images = Image.where(liked: true).eager_load(:thumbnail).order(:created_at).page(page)
     has_next = !images.empty? && !images.last_page?
     next_page = has_next ? page + 1 : nil
     render json: { records: images.map(&method(:serialize_image)), page: { has_next: has_next, next: next_page } }

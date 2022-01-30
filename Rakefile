@@ -21,6 +21,7 @@ desc 'Start pre-compiled server'
 task :run do
   ENV['APP_ENV'] = 'production'
   ENV['RAILS_ENV'] = 'production'
+  ENV['RAILS_SERVE_STATIC_FILES'] ||= 'true'
   sh 'puma', '--bind=tcp://0.0.0.0:4567', '--workers=4'
 end
 
@@ -28,9 +29,7 @@ end
 desc 'Build assets'
 task build: %w[build-gallery compile]
 
-task :'build-gallery' do
-  sh 'npm', 'run', 'build'
-end
+task 'build-gallery': 'assets:precompile'
 
 task :compile do
   Dir.chdir File.expand_path('ext/parrhasius', __dir__)
