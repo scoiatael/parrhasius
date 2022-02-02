@@ -74,7 +74,7 @@
     "workbox-webpack-plugin": "4.3.1"
   },
   "scripts": {
-    "build": "./node_modules/.bin/esbuild app/javascript/index.js --loader:.js=jsx --bundle --sourcemap --outdir=app/assets/builds"
+    "build": "./node_modules/.bin/esbuild app/javascript/entrypoints/*.js --loader:.js=jsx --bundle --sourcemap --outdir=app/assets/builds"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -92,8 +92,6 @@
     ]
   },
   "babel": {
-    "presets": [
-      "react-app"
-    ]
+    "presets": ["react-app"]
   }
 }
