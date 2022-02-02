@@ -63,6 +63,13 @@ class QueriesController < ApplicationController # rubocop:todo Style/Documentati
     send_file tmp.path
   end
 
+  def image
+    path = File.expand_path(Base64.urlsafe_decode64(params.fetch('path')), Parrhasius::DIR)
+    return 403 unless path.starts_with?(::Parrhasius::DIR)
+
+    send_file path
+  end
+
   private
 
   def serialize_image(i) # rubocop:todo Naming/MethodParameterName

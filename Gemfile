@@ -15,7 +15,6 @@ gem 'nokogiri'
 gem 'rdoc' # rails bails on prod without this
 gem 'ruby-progressbar'
 gem 'rubyzip'
-gem 'sinatra'
 
 # webserver
 gem 'puma'
