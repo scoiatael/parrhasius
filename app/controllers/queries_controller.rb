@@ -64,7 +64,7 @@ class QueriesController < ApplicationController # rubocop:todo Style/Documentati
   end
 
   def image
-    path = File.expand_path(Base64.urlsafe_decode64(params.fetch('path')), Parrhasius::DIR)
+    path = File.expand_path("#{params.fetch('path')}.#{params.fetch('format')}", Parrhasius::DIR)
     return 403 unless path.starts_with?(::Parrhasius::DIR)
 
     send_file path
@@ -87,8 +87,7 @@ class QueriesController < ApplicationController # rubocop:todo Style/Documentati
   def image_url(image)
     path = Pathname.new(image.path)
     rel = path.relative? ? path.to_s : path.relative_path_from(Parrhasius::DIR).to_s
-    b64 = Base64.urlsafe_encode64(rel)
-    request.base_url + "/image/#{b64}"
+    request.base_url + "/image/#{rel}"
   end
 
   def status(job)

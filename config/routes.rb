@@ -4,7 +4,7 @@
 Rails.application.routes.draw do
   get '/', to: 'folder#index'
   # "static" - to be exposed via nginx
-  get '/image/:path', to: 'queries#image'
+  get '/image/*path.:format', to: 'queries#image'
 
   # API:
   post '/api/download', to: 'commands#download'
