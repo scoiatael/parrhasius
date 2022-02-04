@@ -86,8 +86,8 @@ class QueriesController < ApplicationController # rubocop:todo Style/Documentati
 
   def image_url(image)
     path = Pathname.new(image.path)
-    rel = Rack::Utils.escape(path.relative? ? path.to_s : path.relative_path_from(Parrhasius::DIR).to_s)
-    request.base_url + "/image/#{rel}"
+    rel = ERB::Util.url_encode(path.relative? ? path.to_s : path.relative_path_from(Parrhasius::DIR).to_s)
+    request.base_url + "/image/#{rel}" # FIXME: upper case is broken?
   end
 
   def status(job)
