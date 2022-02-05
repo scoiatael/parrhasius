@@ -120,6 +120,8 @@ GEM
     faraday_middleware (1.2.0)
       faraday (~> 1.0)
     ffi (1.15.4)
+    font-awesome-rails (4.7.0.8)
+      railties (>= 3.2, < 8.0)
     formatador (0.3.0)
     globalid (1.0.0)
       activesupport (>= 5.0)
@@ -372,6 +374,7 @@ DEPENDENCIES
   faraday-cookie_jar
   faraday_middleware
   ffi
+  font-awesome-rails
   guard
   guard-rack
   haml-rails (~> 2.0)

@@ -42,6 +42,9 @@ end
 # RAILS
 gem 'haml-rails', '~> 2.0'
 
+# https://github.com/bokmann/font-awesome-rails
+gem 'font-awesome-rails'
+
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem 'jbuilder'
 gem 'jsbundling-rails'

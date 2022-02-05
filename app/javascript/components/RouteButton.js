@@ -2,8 +2,8 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useHistory, useRouteMatch } from "react-router-dom";
 
-function RouteButton({ suffix, icon, style }) {
-  const classes = `btn-floating default ${style}`;
+function RouteButton({ suffix, icon, className, style }) {
+  const classes = `btn-floating default ${className}`;
   const history = useHistory();
   // TODO: Weird workaround. Either use ReactDOM portals or migrate to SSR via Rails
   const folderMatch = useRouteMatch("/folders/:folderId");
@@ -16,7 +16,7 @@ function RouteButton({ suffix, icon, style }) {
 
   if (!match || isOn) {
     return (
-      <button className="btn-floating disabled">
+      <button className="btn-floating disabled" style={style}>
         <FontAwesomeIcon icon={icon} />
       </button>
     );
@@ -34,7 +34,7 @@ function RouteButton({ suffix, icon, style }) {
   };
 
   return (
-    <button className={classes} onClick={navigate}>
+    <button className={classes} onClick={navigate} style={style}>
       <FontAwesomeIcon icon={icon} />
     </button>
   );

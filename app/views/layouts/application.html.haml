@@ -8,4 +8,25 @@
     = csp_meta_tag
     = stylesheet_link_tag "application", "data-turbo-track": "reload"
   %body
+    - folders = Folder.select(:id, :name).order(:'-created_at')
+    %nav
+      .nav-wrapper
+        %a.brand-logo{:href => "/#"} Parrhasius
+        %a.sidenav-trigger{"data-target" => "mobile-menu", :href => "#"}
+          = fa_icon "list"
+        %ul.right.hide-on-med-and-down
+          %li
+          - folders[...6].each do |folder|
+            %li
+              %a{href: "/#/folders/#{folder.id}"} #{folder.name}
+        %a.right{href: "/#/liked"} liked ❤
+        %div.right{id: 'navbar-buttons'}
+    %ul#mobile-menu.sidenav
+      %li
+        %a{href: "/#/liked"} liked ❤
+      - folders.reverse.each do |folder|
+        %li
+          %a{href: "/#/folders/#{folder.id}"} #{folder.name}
     = yield
+    = javascript_include_tag "materialize", "data-turbo-track": "reload", defer: true
+    = stylesheet_link_tag "materialize", "data-turbo-track": "reload"
