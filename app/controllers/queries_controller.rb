@@ -26,26 +26,18 @@ class QueriesController < ApplicationController # rubocop:todo Style/Documentati
   end
 
   def folders
-    fs = Folder.eager_load(:thumbnail).all
-    json = fs.to_h { |f| [f.id, { name: f.name, avatar: image_url(f.avatar!) }] }
-    render json: { folders: json }
+    @folders = Folder.eager_load(:thumbnail).all
   end
 
-  def folder_images # rubocop:todo Metrics/AbcSize
+  def folder_images
     folder = Folder.find(params.fetch('folder_id'))
     page = params.fetch('page', '1').to_i
-    images = folder.images.eager_load(:thumbnail).order(:created_at).page(page)
-    has_next = !images.empty? && !images.last_page?
-    next_page = has_next ? page + 1 : nil
-    render json: { records: images.map(&method(:serialize_image)), page: { has_next: has_next, next: next_page } }
+    @images = folder.images.eager_load(:thumbnail).order(:created_at).page(page)
   end
 
   def liked_images
     page = params.fetch('page', '1').to_i
-    images = Image.where(liked: true).eager_load(:thumbnail).order(:created_at).page(page)
-    has_next = !images.empty? && !images.last_page?
-    next_page = has_next ? page + 1 : nil
-    render json: { records: images.map(&method(:serialize_image)), page: { has_next: has_next, next: next_page } }
+    @images = Image.where(liked: true).eager_load(:thumbnail).order(:created_at).page(page)
   end
 
   def folder_bundle # rubocop:todo Metrics/AbcSize
@@ -71,24 +63,6 @@ class QueriesController < ApplicationController # rubocop:todo Style/Documentati
   end
 
   private
-
-  def serialize_image(i) # rubocop:todo Naming/MethodParameterName
-    {
-      id: i.id,
-      title: File.basename(i.path),
-      width: i.width,
-      height: i.height,
-      src: image_url(i.thumbnail),
-      original: image_url(i),
-      liked: i.liked?
-    }
-  end
-
-  def image_url(image)
-    path = Pathname.new(image.path)
-    rel = ERB::Util.url_encode(path.relative? ? path.to_s : path.relative_path_from(Parrhasius::DIR).to_s)
-    request.base_url + "/image/#{rel}"
-  end
 
   def status(job)
     { status: job.to_h }
