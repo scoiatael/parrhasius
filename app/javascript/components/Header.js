@@ -1,9 +1,8 @@
 // @flow
-// @jsx glam
-/*eslint no-unused-vars: ["warn", { "varsIgnorePattern": "glam" }]*/
+// @jsx jsx
+/*eslint no-unused-vars: ["warn", { "varsIgnorePattern": "jsx" }]*/
 
-import glam from "glam";
-import React from "react";
+import { jsx } from "@emotion/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faTimes,
