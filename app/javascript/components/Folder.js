@@ -19,18 +19,10 @@ function Folder({ apiPath }) {
   };
 
   const onDelete = useCallback(
-    (currentPage) => (photoIndex) => {
+    (currentPage) => async (photoIndex) => {
       const currentPhoto = pages.get(currentPage).get(photoIndex);
-      const toBeDeleted = window.confirm(`Delete photo ${currentPhoto.title}?`);
-      if (toBeDeleted) {
-        deletePhoto(currentPhoto.id)
-          .then(() => {
-            setPages(
-              pages.set(currentPage, pages.get(currentPage).delete(photoIndex))
-            );
-          })
-          .catch(console.error.bind(console));
-      }
+      await deletePhoto(currentPhoto.id);
+      setPages(pages.set(currentPage, pages.get(currentPage).delete(photoIndex)));
     },
     [pages]
   );
