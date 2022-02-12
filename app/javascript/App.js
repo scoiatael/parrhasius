@@ -6,7 +6,7 @@ import MergeButton from "./components/MergeButton";
 import BundleButton from "./components/BundleButton";
 import TrashButton from "./components/TrashButton";
 import DownloadStatus from "./components/DownloadStatus";
-import { getFolders, mergeFolders, deleteFolder, bundleFolder } from "./api";
+import { getFolders, deleteFolder, bundleFolder } from "./api";
 import { List, Map } from "immutable";
 import {
   HashRouter as Router,
@@ -41,11 +41,6 @@ function App() {
     setLoaded(false);
   };
 
-  const merge = (key) => {
-    const target = prompt("Merge with?", "wallpapers");
-    mergeFolders(key, target).then(refresh);
-  };
-
   const trash = (key, title) => {
     const toBeDeleted = window.confirm(`Delete folder ${title}?`);
     if (toBeDeleted) {
@@ -53,11 +48,6 @@ function App() {
     }
   };
 
-  const links = folders.toArray().map(([k, { name }]) => (
-    <li key={k}>
-      <Link to={"/folders/" + k}>{name}</Link>
-    </li>
-  ));
   const bodyLinks = folders.toArray().map(([k, { name, avatar }]) => (
     <li key={k} className="collection-item avatar">
       <img src={avatar} alt="" className="circle" />
@@ -65,7 +55,7 @@ function App() {
         {name}
       </Link>
       <div className="secondary-content">
-        <MergeButton onClick={() => merge(k)} />
+        <MergeButton folderId={k} onClick={refresh} />
         <BundleButton onClick={() => bundleFolder(k)} />
         <TrashButton onClick={() => trash(k, name)} />
       </div>
