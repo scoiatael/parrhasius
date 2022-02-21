@@ -16,7 +16,6 @@ function Photos({photos, onDelete, onLike}) {
   }, []);
 
   const closeLightbox = useCallback(() => {
-    setCurrentImage(0);
     setViewerIsOpen(false);
   }, []);
 
@@ -41,10 +40,10 @@ function Photos({photos, onDelete, onLike}) {
     <Modal onClose={closeLightbox}>
       <Carousel
         components={{ Footer: null, NavigationPrev: null, Navigation: null, Header: Header(handleDialogOpen, likeCurrentPhoto) }}
-        currentIndex={currentImage}
-        views={photos.map((x, idx) => ({
+        currentIndex={0}
+        views={[photos[currentImage]].map((x, idx) => ({
           ...x,
-          src: idx === currentImage ? x.original : x.src,
+          src: x.original,
           srcset: x.srcSet,
           caption: x.title
         }))}
