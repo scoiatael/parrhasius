@@ -1,0 +1,12 @@
+%div.progress
+  %div.determinate#determinate{style: "width: 0%"}
+%div.swiper
+  %div.swiper-wrapper
+    - @images.each do |image|
+      %div.swiper-slide.valign-wrapper
+        %img.swiper-lazy.z-depth-1{'data-src': "#{image_url(image.path)}", alt: "#{File.basename(image.path)}"}
+        %div.swiper-lazy-preloader
+  %div.swiper-button-prev
+  %div.swiper-button-next
+= javascript_include_tag "slideshow", "data-turbo-track": "reload", defer: true
+= stylesheet_link_tag "slideshow", "data-turbo-track": "reload"

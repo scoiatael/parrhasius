@@ -1,0 +1,15 @@
+.swiper-slide {
+  height: calc(100vh - 105px);
+}
+.swiper-slide img {
+  max-width: 100%;
+  max-height: calc(100vh - 105px);
+}
+
+.swiper {
+  height: 100%;
+}
+
+#determinate {
+  transition: width 0.3s linear;
+}

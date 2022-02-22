@@ -2,7 +2,7 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useHistory, useRouteMatch } from "react-router-dom";
 
-function RouteButton({ suffix, icon, className, style }) {
+function RouteButton({ suffix, icon, className, style, external }) {
   const classes = `btn-floating default ${className}`;
   const history = useHistory();
   // TODO: Weird workaround. Either use ReactDOM portals or migrate to SSR via Rails
@@ -26,10 +26,16 @@ function RouteButton({ suffix, icon, className, style }) {
   } = match;
 
   const navigate = () => {
+    let location = "";
     if (likedMatch) {
-      history.push(`/liked${suffix}`);
+      location =`/liked${suffix}`;
     } else {
-      history.push(`/folders/${folderId}${suffix}`);
+      location = `/folders/${folderId}${suffix}`;
+    }
+    if (external) {
+      window.location = location;
+    } else{
+      history.push(location)
     }
   };
 
