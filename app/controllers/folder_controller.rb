@@ -8,6 +8,6 @@ class FolderController < ApplicationController
   end
 
   def liked_slideshow
-    @images = Image.page.per(SLIDESHOW_PAGE_SIZE)
+    @images = Image.where(liked: true).page.per(SLIDESHOW_PAGE_SIZE)
   end
 end
