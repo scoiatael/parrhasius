@@ -20,8 +20,8 @@ function RouteButton({ suffix, icon, className, style, external }) {
     let location = `${match}/${suffix}`;
     if (external) {
       window.location = location;
-    } else{
-      history.push(location)
+    } else {
+      history.push(location);
     }
   };
 

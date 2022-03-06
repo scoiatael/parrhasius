@@ -8,14 +8,8 @@ import TrashButton from "./components/TrashButton";
 import DownloadStatus from "./components/DownloadStatus";
 import { getFolders, deleteFolder, bundleFolder } from "./api";
 import { List, Map } from "immutable";
-import {
-  HashRouter as Router,
-  Switch,
-  Route,
-  Link,
-} from "react-router-dom";
-import Folders from "./Folders"
-
+import { HashRouter as Router, Switch, Route, Link } from "react-router-dom";
+import Folders from "./Folders";
 
 function App() {
   const [loading, setLoading] = useState(false);

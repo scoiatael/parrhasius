@@ -22,7 +22,9 @@ function Folder({ apiPath }) {
     (currentPage) => async (photoIndex) => {
       const currentPhoto = pages.get(currentPage).get(photoIndex);
       await deletePhoto(currentPhoto.id);
-      setPages(pages.set(currentPage, pages.get(currentPage).delete(photoIndex)));
+      setPages(
+        pages.set(currentPage, pages.get(currentPage).delete(photoIndex))
+      );
     },
     [pages]
   );
