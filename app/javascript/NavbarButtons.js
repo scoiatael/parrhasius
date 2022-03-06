@@ -10,14 +10,12 @@ const NavbarButtons = () => (
       icon={faPlay}
       suffix="/slideshow"
       style={style}
-      external={true}
     />
     <RouteButton
       style={style}
       className="purple lighten-1"
       icon={faCameraRetro}
-      suffix="/ordered"
-      external={false}
+      suffix="/comicstrip"
     />
     <DownloadButton />
   </div>

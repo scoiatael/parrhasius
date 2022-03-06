@@ -4,8 +4,12 @@
 Rails.application.routes.draw do
   get '/', to: 'folder#index'
   get '/app', to: 'folder#app'
-  get '/folders/:folder_id/slideshow', to: 'folder#folder_slideshow'
-  get '/liked/slideshow', to: 'folder#liked_slideshow'
+  get '/folders/:folder_id', to: 'folder#folder_gallery', as: :folder_gallery
+  get '/folders/:folder_id/slideshow', to: 'folder#folder_slideshow', as: :folder_slideshow
+  get '/folders/:folder_id/comicstrip', to: 'folder#folder_comicstrip', as: :folder_comicstrip
+  get '/liked', to: 'folder#liked_gallery', as: :liked_gallery
+  get '/liked/slideshow', to: 'folder#liked_slideshow', as: :liked_slideshow
+  get '/liked/comicstrip', to: 'folder#liked_comicstrip', as: :liked_comicstrip
   # "static" - to be exposed via nginx
   get '/image/*path.:format', to: 'queries#image', as: :static_image
 

@@ -18,7 +18,7 @@
           %li
           - folders[...6].each do |folder|
             %li
-              %a{href: "/#/folders/#{folder.id}"} #{folder.name}
+              %a{href: folder_gallery_path(folder_id: folder.id)} #{folder.name}
         %a.right{href: "/#/liked"} liked ❤
         %div.right{id: 'navbar-buttons'}
     %ul#mobile-menu.sidenav
@@ -26,9 +26,8 @@
         %a{href: "/#/liked"} liked ❤
       - folders.reverse.each do |folder|
         %li
-          %a{href: "/#/folders/#{folder.id}"} #{folder.name}
+          %a{href: folder_gallery_path(folder_id: folder.id)} #{folder.name}
+    = include_gon
     = yield
-    :javascript
-      window.routeMatch = #{@route_match.to_json.html_safe};
     = javascript_include_tag "materialize", "data-turbo-track": "reload", defer: true
     = stylesheet_link_tag "materialize", "data-turbo-track": "reload"

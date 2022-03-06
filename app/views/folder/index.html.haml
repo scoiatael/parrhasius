@@ -4,7 +4,7 @@
             - @folders.each do |folder|
                 %li.collection-item.avatar
                     %img.circle{src: image_url(folder.avatar!.path)}
-                    %a.title{href: "/app#/folders/#{folder.id}"}
+                    %a.title{href: folder_gallery_path(folder_id: folder.id)}
                         = folder.name
                     %div.secondary-content
                         = react_component("MergeButton", {folderId: folder.id}, tag: 'span')

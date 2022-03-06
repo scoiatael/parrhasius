@@ -1,11 +1,9 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useHistory } from "react-router-dom";
 
-function RouteButton({ suffix, icon, className, style, external }) {
+function RouteButton({ suffix, icon, className, style }) {
   const classes = `btn-floating default ${className}`;
-  const history = useHistory();
-  const match = window.routeMatch || "";
+  const match = (window.gon && window.gon.routeMatch) || "";
   const isOn = match.endsWith(suffix);
 
   if (!match || isOn) {
@@ -17,12 +15,7 @@ function RouteButton({ suffix, icon, className, style, external }) {
   }
 
   const navigate = () => {
-    let location = `${match}/${suffix}`;
-    if (external) {
-      window.location = location;
-    } else {
-      history.push(location);
-    }
+    window.location = `${match}${suffix}`;
   };
 
   return (

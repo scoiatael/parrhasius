@@ -97,3 +97,5 @@ gem 'sassc-rails'
 gem 'image_processing', '~> 1.2'
 
 gem 'react-rails'
+
+gem 'gon'

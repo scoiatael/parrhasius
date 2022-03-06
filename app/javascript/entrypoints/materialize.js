@@ -6,10 +6,12 @@ import ReactRailsUJS from "react_ujs";
 import MergeButton from "../components/MergeButton";
 import BundleButton from "../components/BundleButton";
 import TrashButton from "../components/TrashButton";
+import Folder from "../components/Folder";
 import NavbarButtons from "../NavbarButtons";
 window.MergeButton = MergeButton;
 window.BundleButton = BundleButton;
 window.TrashButton = TrashButton;
+window.Folder = Folder;
 document.addEventListener("DOMContentLoaded", function () {
   var elems = document.querySelectorAll(".sidenav");
   window.M.Sidenav.init(elems, {});

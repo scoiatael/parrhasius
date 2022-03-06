@@ -131,6 +131,11 @@ GEM
     formatador (0.3.0)
     globalid (1.0.0)
       activesupport (>= 5.0)
+    gon (6.4.0)
+      actionpack (>= 3.0.20)
+      i18n (>= 0.7)
+      multi_json
+      request_store (>= 1.0)
     guard (2.18.0)
       formatador (>= 0.2.4)
       listen (>= 2.7, < 4.0)
@@ -209,6 +214,7 @@ GEM
     mini_portile2 (2.6.1)
     minitest (5.15.0)
     msgpack (1.4.2)
+    multi_json (1.15.0)
     multipart-post (2.1.1)
     nenv (0.3.0)
     nio4r (2.5.8)
@@ -284,6 +290,8 @@ GEM
     regexp_parser (2.2.0)
     reline (0.3.1)
       io-console (~> 0.5)
+    request_store (1.5.1)
+      rack (>= 1.4)
     reverse_markdown (2.1.1)
       nokogiri
     rexml (3.2.5)
@@ -387,6 +395,7 @@ DEPENDENCIES
   faraday_middleware
   ffi
   font-awesome-rails
+  gon
   guard
   guard-rack
   haml-rails (~> 2.0)

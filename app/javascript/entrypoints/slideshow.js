@@ -29,7 +29,7 @@ const options = {
   lazy: true,
 
   // https://codesandbox.io/s/jke0r?file=/index.html:2226-2277
-  slidesPerView: 3,
+  slidesPerView: window.gon.slidesPerView,
   spaceBetween: 30,
 
   autoplay: {
