@@ -6,4 +6,7 @@
                     %img.circle{src: image_url(folder.avatar!.path)}
                     %a.title{href: "/app#/folders/#{folder.id}"}
                         = folder.name
-                        %div.secondary-content
+                    %div.secondary-content
+                        = react_component("MergeButton", {folderId: folder.id}, tag: 'span')
+                        = react_component("BundleButton", {folderId: folder.id}, tag: 'span')
+                        = react_component("TrashButton", {folderId: folder.id}, tag: 'span')

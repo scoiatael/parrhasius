@@ -62,6 +62,7 @@
     "react-router-dom": "^5.2.0",
     "react-simple-img": "^2.3.9",
     "react-window": "^1.8.5",
+    "react_ujs": "^2.6.1",
     "resolve": "1.15.0",
     "resolve-url-loader": "3.1.1",
     "sass-loader": "8.0.2",

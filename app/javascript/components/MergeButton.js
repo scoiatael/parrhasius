@@ -9,7 +9,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 
-function MergeButton({folderId, onClick}) {
+function MergeButton({folderId}) {
  const [open, setOpen] = useState(false);
  const [value, setValue] = useState('');
 
@@ -23,8 +23,9 @@ function MergeButton({folderId, onClick}) {
   const handleChange = (ev) => {
       setValue(ev.target.value);
   };
-    const merge = () => {
-        mergeFolders(folderId, value).then(onClick);
+    const merge = async () => {
+        await mergeFolders(folderId, value)
+      window.location.reload();
     };
     const style = {
         marginRight: '0.2em'
@@ -37,7 +38,7 @@ function MergeButton({folderId, onClick}) {
         open={open}
         onClose={handleClose}
         maxWidth="md"
-        fullWidth={true}>
+        fullwidth="true">
         <DialogTitle>Merge with...</DialogTitle>
         <DialogContent>
           <InputUnstyled
@@ -46,7 +47,7 @@ function MergeButton({folderId, onClick}) {
             id="name"
             label="folder name"
             type="text"
-            fullWidth={true}
+            fullwidth="true"
             value={value}
             onChange={handleChange}
           />
