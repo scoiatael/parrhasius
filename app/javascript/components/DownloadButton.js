@@ -44,7 +44,7 @@ function DownloadButton() {
         open={open}
         onClose={handleClose}
         maxWidth="md"
-        fullWidth="true">
+        fullWidth={true}>
         <DialogTitle>Download...</DialogTitle>
         <DialogContent>
           <InputUnstyled
@@ -54,7 +54,7 @@ function DownloadButton() {
             id="name"
             label="folder name"
             type="url"
-            fullWidth
+            fullWidth={true}
             value={value}
             onChange={handleChange}
           />

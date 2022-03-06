@@ -37,7 +37,7 @@ function MergeButton({folderId, onClick}) {
         open={open}
         onClose={handleClose}
         maxWidth="md"
-        fullWidth="true">
+        fullWidth={true}>
         <DialogTitle>Merge with...</DialogTitle>
         <DialogContent>
           <InputUnstyled
@@ -46,7 +46,7 @@ function MergeButton({folderId, onClick}) {
             id="name"
             label="folder name"
             type="text"
-            fullWidth
+            fullWidth={true}
             value={value}
             onChange={handleChange}
           />

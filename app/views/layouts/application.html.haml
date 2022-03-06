@@ -28,5 +28,7 @@
         %li
           %a{href: "/#/folders/#{folder.id}"} #{folder.name}
     = yield
+    :javascript
+      window.routeMatch = #{@route_match.to_json.html_safe};
     = javascript_include_tag "materialize", "data-turbo-track": "reload", defer: true
     = stylesheet_link_tag "materialize", "data-turbo-track": "reload"

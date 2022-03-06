@@ -15,7 +15,6 @@ import {
   Link,
 } from "react-router-dom";
 import Folders from "./Folders"
-import NavbarButtons from "./NavbarButtons"
 
 
 function App() {
@@ -65,7 +64,6 @@ function App() {
   return (
     <Router>
       <div>
-        <NavbarButtons/>
         <Switch>
           <Route path="/folders">
             <Folders />

@@ -3,6 +3,7 @@
 # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 Rails.application.routes.draw do
   get '/', to: 'folder#index'
+  get '/app', to: 'folder#app'
   get '/folders/:folder_id/slideshow', to: 'folder#folder_slideshow'
   get '/liked/slideshow', to: 'folder#liked_slideshow'
   # "static" - to be exposed via nginx

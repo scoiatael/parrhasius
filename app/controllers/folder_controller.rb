@@ -1,5 +1,9 @@
 class FolderController < ApplicationController
-  def index; end
+  def app; end
+
+  def index
+    @folders = Folder.eager_load(:thumbnail).all
+  end
 
   SLIDESHOW_PAGE_SIZE = 200
   def folder_slideshow

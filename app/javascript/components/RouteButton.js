@@ -1,18 +1,12 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useHistory, useRouteMatch } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 function RouteButton({ suffix, icon, className, style, external }) {
   const classes = `btn-floating default ${className}`;
   const history = useHistory();
-  // TODO: Weird workaround. Either use ReactDOM portals or migrate to SSR via Rails
-  const folderMatch = useRouteMatch("/folders/:folderId");
-  const likedMatch = useRouteMatch("/liked");
-  const isFolderOn = useRouteMatch(`/folders/:folderId${suffix}`);
-  const isLikedOn = useRouteMatch(`/liked${suffix}`);
-  const match = folderMatch || likedMatch;
-  const isOn = isFolderOn || isLikedOn;
-  // ENDOF workaround
+  const match = window.routeMatch || "";
+  const isOn = match.endsWith(suffix);
 
   if (!match || isOn) {
     return (
@@ -21,17 +15,9 @@ function RouteButton({ suffix, icon, className, style, external }) {
       </button>
     );
   }
-  const {
-    params: { folderId },
-  } = match;
 
   const navigate = () => {
-    let location = "";
-    if (likedMatch) {
-      location =`/liked${suffix}`;
-    } else {
-      location = `/folders/${folderId}${suffix}`;
-    }
+    let location = `${match}/${suffix}`;
     if (external) {
       window.location = location;
     } else{
