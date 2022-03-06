@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 function RouteButton({ suffix, icon, className, style }) {
   const classes = `btn-floating default ${className}`;
   const match = (window.gon && window.gon.routeMatch) || "";
-  const isOn = match.endsWith(suffix);
+  const isOn = match && window.location.pathname.endsWith(suffix);
 
   if (!match || isOn) {
     return (

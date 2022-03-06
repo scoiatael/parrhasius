@@ -4,11 +4,16 @@ import Swiper from "swiper/bundle";
 import "swiper/css/bundle";
 import "./slideshow.css";
 
-const delay = 3000;
+const autoplay = window.gon && window.gon.autoplay;
 let progress = 0;
-setInterval(() => {
-  document.getElementById("determinate").style["width"] = `${progress * 100}%`;
-}, 300);
+const progressBar = document.getElementById("determinate");
+if (autoplay) {
+  setInterval(() => {
+    progressBar.style["width"] = `${progress * 100}%`;
+  }, 300);
+} else {
+  progressBar.parentElement.remove();
+}
 let interval = null;
 const options = {
   cssMode: true,
@@ -32,9 +37,7 @@ const options = {
   slidesPerView: window.gon.slidesPerView,
   spaceBetween: 30,
 
-  autoplay: {
-    delay,
-  },
+  autoplay,
 
   loop: true,
   on: {
@@ -44,7 +47,7 @@ const options = {
     autoplayStart: () => {
       const updateInterval = 100.0;
       interval = window.setInterval(() => {
-        progress += updateInterval / delay;
+        progress += updateInterval / autoplay.delay;
       }, updateInterval);
     },
     autoplayStop: () => {
