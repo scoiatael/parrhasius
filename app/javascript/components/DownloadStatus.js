@@ -19,9 +19,7 @@ function ProgressBar({ stage, width }) {
   );
 }
 
-function DownloadStatus({ onDone }) {
-  const { jobId } = useParams();
-  const history = useHistory();
+function DownloadStatus({ jobId }) {
   const [status, setStatus] = useState(Map());
 
   useEffect(() => {
@@ -31,8 +29,7 @@ function DownloadStatus({ onDone }) {
         status: { status, step, progress, total },
       } = node;
       if (status === "completed" || status === "failed") {
-        history.push("/");
-        onDone();
+        window.location = "/";
       }
       setStatus((st) => st.set(step, Math.floor((100 * progress) / total)));
     };
@@ -41,7 +38,7 @@ function DownloadStatus({ onDone }) {
     return () => {
       download.removeListener(listener);
     };
-  }, [history, setStatus, jobId, onDone]);
+  }, [setStatus, jobId]);
 
   const statusPs = status
     .toArray()

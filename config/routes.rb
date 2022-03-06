@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   get '/liked', to: 'folder#liked_gallery', as: :liked_gallery
   get '/liked/slideshow', to: 'folder#liked_slideshow', as: :liked_slideshow
   get '/liked/comicstrip', to: 'folder#liked_comicstrip', as: :liked_comicstrip
+  get '/downloads/:job_id', to: 'folder#download_status'
   # "static" - to be exposed via nginx
   get '/image/*path.:format', to: 'queries#image', as: :static_image
 
