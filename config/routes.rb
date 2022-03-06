@@ -3,7 +3,6 @@
 # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 Rails.application.routes.draw do
   get '/', to: 'folder#index'
-  get '/app', to: 'folder#app'
   get '/folders/:folder_id', to: 'folder#folder_gallery', as: :folder_gallery
   get '/folders/:folder_id/slideshow', to: 'folder#folder_slideshow', as: :folder_slideshow
   get '/folders/:folder_id/comicstrip', to: 'folder#folder_comicstrip', as: :folder_comicstrip

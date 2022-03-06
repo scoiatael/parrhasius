@@ -1,6 +1,4 @@
 class FolderController < ApplicationController
-  def app; end
-
   def index
     @folders = Folder.eager_load(:thumbnail).all
   end
