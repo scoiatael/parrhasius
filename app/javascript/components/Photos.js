@@ -49,7 +49,7 @@ function Photos({ photos, onDelete, onLike }) {
           Header: Header(handleDialogOpen, likeCurrentPhoto),
         }}
         currentIndex={0}
-        views={[photos[currentImage]].map((x, idx) => ({
+        views={[photos[currentImage]].map((x) => ({
           ...x,
           src: x.original,
           srcset: x.srcSet,

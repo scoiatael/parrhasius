@@ -4,6 +4,7 @@ import { getPhotos, deletePhoto, likePhoto } from "../api";
 import InfiniteScroll from "react-infinite-scroller";
 import { List } from "immutable";
 import Loader from "./Loader";
+import "./Folder.css"
 
 function Folder({ apiPath }) {
   const [pages, setPages] = useState(List.of());

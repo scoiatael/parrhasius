@@ -8,13 +8,11 @@ const cont = {
 
 const Image =
   (onClick) =>
-  ({
-    index,
-    left,
-    top,
-    key,
-    photo: { title, width, height, src, ...imgStyle },
-  }) =>
+    ({
+      index,
+      key,
+      photo: { title, width, height, src, ...imgStyle },
+    }) =>
     (
       <div
         key={key}
