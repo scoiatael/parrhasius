@@ -16,6 +16,8 @@ gem 'rdoc' # rails bails on prod without this
 gem 'ruby-progressbar'
 gem 'rubyzip'
 
+gem 'sqlite3'
+
 # webserver
 gem 'puma'
 gem 'rack-cache'
@@ -23,7 +25,6 @@ gem 'rack-cache'
 group :development do
   gem 'guard'
   gem 'guard-rack'
-  gem 'pry-byebug'
   gem 'rack-cors'
   gem 'rake'
   gem 'rubocop'
@@ -49,7 +50,6 @@ gem 'font-awesome-rails'
 gem 'jbuilder'
 gem 'jsbundling-rails'
 gem 'rails', '~> 7.0.0'
-gem 'sqlite3', '~> 1.4'
 
 # https://github.com/brandonhilkert/sucker_punch#active-job
 gem 'sucker_punch'

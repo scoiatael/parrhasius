@@ -76,7 +76,6 @@ GEM
     bootsnap (1.9.3)
       msgpack (~> 1.0)
     builder (3.2.4)
-    byebug (11.1.3)
     coderay (1.1.3)
     concurrent-ruby (1.1.9)
     connection_pool (2.2.5)
@@ -230,9 +229,6 @@ GEM
     pry (0.13.1)
       coderay (~> 1.1)
       method_source (~> 1.0)
-    pry-byebug (3.9.0)
-      byebug (~> 11.0)
-      pry (~> 0.13.0)
     psych (4.0.3)
       stringio
     public_suffix (4.0.6)
@@ -406,7 +402,6 @@ DEPENDENCIES
   kaminari
   mini_magick
   nokogiri
-  pry-byebug
   puma
   rack-cache
   rack-cors
@@ -422,11 +417,11 @@ DEPENDENCIES
   shotgun
   solargraph
   sprockets-rails
-  sqlite3 (~> 1.4)
+  sqlite3
   stimulus-rails
   sucker_punch
   turbo-rails
   web-console
 
 BUNDLED WITH
-   2.2.22
+   2.2.33
