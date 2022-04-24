@@ -12,13 +12,14 @@ import DialogTitle from "@mui/material/DialogTitle";
 function DownloadButton() {
   const [open, setOpen] = useState(false);
   const [disabled, setDisabled] = useState(false);
-  const [value, setValue] = useState("https://...");
+  const [value, setValue] = useState("");
 
   const onClick = async () => {
     await setDisabled(true);
     const response = await download(value);
     const { job_id: jobId } = await response.json();
     window.location = `/downloads/${jobId}`;
+    await setValue("");
     await handleClose();
     await setDisabled(false);
   };
@@ -49,7 +50,8 @@ function DownloadButton() {
             disabled={disabled}
             margin="dense"
             id="name"
-            label="folder name"
+            label="folder url"
+            placeholder="https://..."
             type="url"
             fullwidth="true"
             value={value}
