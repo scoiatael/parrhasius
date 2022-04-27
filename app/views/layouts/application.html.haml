@@ -18,15 +18,16 @@
           %li
           - folders[...6].each do |folder|
             %li
-              %a{href: "/#/folders/#{folder.id}"} #{folder.name}
-        %a.right{href: "/#/liked"} liked ❤
+              %a{href: folder_gallery_path(folder_id: folder.id)} #{folder.name}
+        %a.right{href: liked_gallery_path} liked ❤
         %div.right{id: 'navbar-buttons'}
     %ul#mobile-menu.sidenav
       %li
-        %a{href: "/#/liked"} liked ❤
+        %a{href: liked_gallery_path} liked ❤
       - folders.reverse.each do |folder|
         %li
-          %a{href: "/#/folders/#{folder.id}"} #{folder.name}
+          %a{href: folder_gallery_path(folder_id: folder.id)} #{folder.name}
+    = include_gon
     = yield
     = javascript_include_tag "materialize", "data-turbo-track": "reload", defer: true
     = stylesheet_link_tag "materialize", "data-turbo-track": "reload"

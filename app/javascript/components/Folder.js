@@ -4,6 +4,7 @@ import { getPhotos, deletePhoto, likePhoto } from "../api";
 import InfiniteScroll from "react-infinite-scroller";
 import { List } from "immutable";
 import Loader from "./Loader";
+import "./Folder.css"
 
 function Folder({ apiPath }) {
   const [pages, setPages] = useState(List.of());
@@ -22,7 +23,9 @@ function Folder({ apiPath }) {
     (currentPage) => async (photoIndex) => {
       const currentPhoto = pages.get(currentPage).get(photoIndex);
       await deletePhoto(currentPhoto.id);
-      setPages(pages.set(currentPage, pages.get(currentPage).delete(photoIndex)));
+      setPages(
+        pages.set(currentPage, pages.get(currentPage).delete(photoIndex))
+      );
     },
     [pages]
   );

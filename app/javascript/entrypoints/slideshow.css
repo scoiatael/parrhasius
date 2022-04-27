@@ -1,9 +1,11 @@
 .swiper-slide {
-  height: calc(100vh - 105px);
+  height: calc(100vh - 105px - 0.5em);
+  justify-content: center;
+  padding-top: 0.5em;
 }
 .swiper-slide img {
   max-width: 100%;
-  max-height: calc(100vh - 105px);
+  max-height: calc(100vh - 105px - 0.5em);
 }
 
 .swiper {

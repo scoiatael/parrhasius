@@ -1,26 +1,25 @@
 import React, { Fragment, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCloudDownloadAlt } from "@fortawesome/free-solid-svg-icons";
-import { useHistory } from "react-router-dom";
 import { download } from "../api";
-import Button from '@mui/material/Button';
-import InputUnstyled from '@mui/base/InputUnstyled';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
+import Button from "@mui/material/Button";
+import InputUnstyled from "@mui/base/InputUnstyled";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
 
 function DownloadButton() {
-  const history = useHistory();
   const [open, setOpen] = useState(false);
   const [disabled, setDisabled] = useState(false);
-  const [value, setValue] = useState('https://...');
+  const [value, setValue] = useState("");
 
   const onClick = async () => {
     await setDisabled(true);
     const response = await download(value);
     const { job_id: jobId } = await response.json();
-    history.push(`/downloads/${jobId}`);
+    window.location = `/downloads/${jobId}`;
+    await setValue("");
     await handleClose();
     await setDisabled(false);
   };
@@ -39,12 +38,11 @@ function DownloadButton() {
 
   return (
     <Fragment>
-      <button className="btn-floating green" onClick={handleClickOpen}> <FontAwesomeIcon icon={faCloudDownloadAlt} /> </button>
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        maxWidth="md"
-        fullWidth="true">
+      <button className="btn-floating green" onClick={handleClickOpen}>
+        {" "}
+        <FontAwesomeIcon icon={faCloudDownloadAlt} />{" "}
+      </button>
+      <Dialog open={open} onClose={handleClose} maxWidth="md" fullwidth="true">
         <DialogTitle>Download...</DialogTitle>
         <DialogContent>
           <InputUnstyled
@@ -52,9 +50,10 @@ function DownloadButton() {
             disabled={disabled}
             margin="dense"
             id="name"
-            label="folder name"
+            label="folder url"
+            placeholder="https://..."
             type="url"
-            fullWidth
+            fullwidth="true"
             value={value}
             onChange={handleChange}
           />

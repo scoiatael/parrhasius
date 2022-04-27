@@ -1,5 +1,12 @@
-%noscript
-    You need to enable JavaScript to run this app.
-%div{id: 'root'}
-= stylesheet_link_tag "app", "data-turbo-track": "reload"
-= javascript_include_tag "app", "data-turbo-track": "reload", defer: true
+%div.container
+    %div.row
+        %div.col.s12.collection
+            - @folders.each do |folder|
+                %li.collection-item.avatar
+                    %img.circle{src: image_url(folder.avatar!.path)}
+                    %a.title{href: folder_gallery_path(folder_id: folder.id)}
+                        = folder.name
+                    %div.secondary-content
+                        = react_component("MergeButton", {folderId: folder.id}, tag: 'span')
+                        = react_component("BundleButton", {folderId: folder.id}, tag: 'span')
+                        = react_component("TrashButton", {folderId: folder.id}, tag: 'span')
