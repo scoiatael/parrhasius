@@ -5,6 +5,7 @@ with pkgs;
 mkShell {
   buildInputs = [
     nodejs-16_x
+    go
     ruby_3_0.devEnv
     bundix
     rubyPackages_3_0.pry-byebug
